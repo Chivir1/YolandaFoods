@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 8: Product Quick-View Details Modal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --accent-red: #D93838;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-friendly: 'Fredoka', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      padding-bottom: 120px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .catalog-wrapper {
+      max-width: 1280px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE7DE;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(18, 78, 40, 0.04);
+      transition: all 0.25s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .product-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(18, 78, 40, 0.08);
+    }
+
+    .card-media {
+      height: 160px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .media-honey { background: radial-gradient(circle at 30% 30%, #FFEFC2 0%, #F5CE68 100%); }
+    .media-palmoil { background: radial-gradient(circle at 30% 30%, #FFD2CC 0%, #E64A38 100%); }
+    .media-yellowpap { background: radial-gradient(circle at 30% 30%, #FFF2B2 0%, #E8B923 100%); }
+    .media-brownpap { background: radial-gradient(circle at 30% 30%, #EBD4BE 0%, #A06D3B 100%); }
+    .media-whitepap { background: radial-gradient(circle at 30% 30%, #FFFFFF 0%, #E0E8E2 100%); }
+    .media-groundnut { background: radial-gradient(circle at 30% 30%, #FBE6C2 0%, #D49B43 100%); }
+    .media-sweetpot { background: radial-gradient(circle at 30% 30%, #FFD6B8 0%, #D96E2E 100%); }
+    .media-irishpot { background: radial-gradient(circle at 30% 30%, #F5E8C8 0%, #BFA054 100%); }
+    .media-onions { background: radial-gradient(circle at 30% 30%, #F3D2DF 0%, #9B2D5D 100%); }
+    .media-lime { background: radial-gradient(circle at 30% 30%, #E2FDC8 0%, #5EB81F 100%); }
+
+    .badge-top-left {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #FFFFFF;
+      color: var(--primary-dark);
+      border: 1px solid rgba(18, 78, 40, 0.2);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 14px;
+    }
+
+    .badge-flyer {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--accent-gold);
+      color: #0A3319;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 14px;
+      text-transform: uppercase;
+    }
+
+    .card-body {
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-cat {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .card-tagline {
+      font-size: 11.5px;
+      color: #A17006;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .btn-quick-view {
+      background: #F0F6F2;
+      border: 1.5px solid #CCDCD0;
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: auto;
+      transition: all 0.2s;
+    }
+
+    .btn-quick-view:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* ========================================================
+       STEP 8: PRODUCT QUICK-VIEW DETAILS MODAL
+       ======================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 33, 19, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-container {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid rgba(18, 78, 40, 0.15);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .modal-backdrop.open .modal-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #D2E0D5;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.15s;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* Modal Hero Visual */
+    .modal-media-banner {
+      height: 220px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-icon-big {
+      font-size: 80px;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.18));
+    }
+
+    .modal-body-content {
+      padding: 28px 32px 36px;
+    }
+
+    .modal-cat-tag {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .modal-product-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .modal-tagline {
+      font-size: 14px;
+      font-weight: 600;
+      color: #A17006;
+      margin-bottom: 18px;
+    }
+
+    /* Spec Tabs inside Modal */
+    .modal-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .modal-specs-grid { grid-template-columns: 1fr; }
+      .modal-body-content { padding: 20px; }
+    }
+
+    .spec-box {
+      background: #F8FAF8;
+      border: 1px solid #E1ECE3;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .spec-header {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .spec-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Packaging & Sizing Pricing Table inside Modal */
+    .pricing-table-wrap {
+      background: #FBFDFB;
+      border: 1.5px solid #E2EAE4;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .pricing-table-header {
+      background: #EAF4EC;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-top: 1px solid #ECF2ED;
+      font-size: 13.5px;
+    }
+
+    .price-row:hover {
+      background: #F4F8F5;
+    }
+
+    .row-size-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .row-price-tag {
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Modal Footer Actions */
+    .modal-actions-bar {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: 18px;
+      border-top: 1px solid #EBEFEA;
+    }
+
+    .btn-modal-wa {
+      background: #25D366;
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+    }
+
+    .btn-modal-wa:hover {
+      background: #1EBE5B;
+    }
+
+    .btn-modal-close {
+      background: #F0F4F1;
+      color: var(--text-muted);
+      border: 1px solid #D5E2D8;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-modal-close:hover {
+      background: #E2ECE5;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 8 of 15 Vetting</span>
+      <span><strong>Product Quick-View Details Modal</strong> (Nutritional Facts, Freshness & Storage Advice)</span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">WhatsApp Test Line: 07040275628</div>
+  </div>
+
+  <div class="catalog-wrapper">
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">Tap Any Product to Open Quick-View Details</h1>
+        <p class="section-sub">Buyers can inspect sourcing origins, storage advice, and flyer benefits before adding to cart.</p>
+      </div>
+    </div>
+
+    <!-- Interactive Grid Triggering Quick View Modal -->
+    <div class="product-grid" id="productGrid">
+      <!-- Injected via JS -->
+    </div>
+  </div>
+
+  <!-- ================= PRODUCT QUICK-VIEW MODAL ================= -->
+  <div class="modal-backdrop" id="productModal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-container" id="modalContainer">
+      <button class="modal-close-btn" onclick="closeModal()" title="Close details">✕</button>
+
+      <!-- Media Banner -->
+      <div class="modal-media-banner" id="modalMedia">
+        <div class="modal-icon-big" id="modalIcon">🍯</div>
+      </div>
+
+      <!-- Content -->
+      <div class="modal-body-content">
+        <div class="modal-cat-tag" id="modalCategory">Category</div>
+        <h2 class="modal-product-title" id="modalTitle">Product Name</h2>
+        <div class="modal-tagline" id="modalTagline">Product Tagline</div>
+
+        <!-- 4 Detailed Culinary & Storage Specs -->
+        <div class="modal-specs-grid">
+          <div class="spec-box">
+            <div class="spec-header">🌿 Sourcing & Purity</div>
+            <div class="spec-desc" id="modalSourcing">Sourcing details...</div>
+          </div>
+
+          <div class="spec-box">
+            <div class="spec-header">🥣 Nutritional Benefits</div>
+            <div class="spec-desc" id="modalBenefits">Health and nutritional facts...</div>
+          </div>
+
+          <div class="spec-box">
+            <div class="spec-header">📦 Storage & Shelf-Life</div>
+            <div class="spec-desc" id="modalStorage">How to store in Lagos weather...</div>
+          </div>
+
+          <div class="spec-box">
+            <div class="spec-header">🚚 Lagos Delivery Packaging</div>
+            <div class="spec-desc" id="modalPackaging">Hygienic packaging standards...</div>
+          </div>
+        </div>
+
+        <!-- Sizing & Pricing Table -->
+        <div class="pricing-table-wrap">
+          <div class="pricing-table-header">Available Packaging Sizes & Lagos Rates (₦)</div>
+          <div id="modalPricingRows">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="modal-actions-bar">
+          <a id="modalWaBtn" href="#" target="_blank" class="btn-modal-wa">
+            <span>💬 Order via WhatsApp (07040275628)</span>
+          </a>
+          <button class="btn-modal-close" onclick="closeModal()">
+            Done Reading
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Detailed Product Database for Quick-View Modal
+    const modalData = [
+      {
+        id: "honey",
+        name: "Pure Honey",
+        category: "Pure Honey & Oils",
+        tagline: "100% Unadulterated, Unfiltered Natural Sweetener",
+        icon: "🍯",
+        mediaClass: "media-honey",
+        sourcing: "Harvested directly from wild certified apiaries with zero added corn syrup, artificial coloring, or refined sugars.",
+        benefits: "Rich in active enzymes, natural pollen, and antibacterial antioxidants. Naturally stabilizes energy without insulin spikes.",
+        storage: "Store at ambient room temperature in a dry cupboard. Pure raw honey never spoils or expires. Do not refrigerate.",
+        packaging: "Poured into sterilized food-grade bottles with tamper-evident seal rings to guarantee absolute purity on arrival.",
+        variants: [
+          { size: "500ml Glass Bottle", price: "₦4,500" },
+          { size: "1 Litre Food-Grade Bottle", price: "₦8,500" },
+          { size: "2 Litre Bulk Family Jug", price: "₦16,000" }
+        ]
+      },
+      {
+        id: "palmoil",
+        name: "Palm Oil",
+        category: "Pure Honey & Oils",
+        tagline: "Cold-Pressed, Thick Red Palm Oil (Zero Additives)",
+        icon: "🌴",
+        mediaClass: "media-palmoil",
+        sourcing: "Extracted from freshly harvested ripe oil palm fruit using authentic local cold-press techniques. Zero Sudan dye, zero water dilution.",
+        benefits: "Naturally rich in Coenzyme Q10 and beta-carotene (provitamin A). High smoke point for rich, authentic native soups and stews.",
+        storage: "Keep in a cool, dark kitchen pantry away from direct sunlight. Stays fresh and rich for up to 12 months.",
+        packaging: "Poured into heavy-duty leak-proof canisters and jerrycans with secure screw caps to prevent any transit spills.",
+        variants: [
+          { size: "1 Litre Sealed Bottle", price: "₦3,200" },
+          { size: "2 Litre Canister", price: "₦6,000" },
+          { size: "5 Litre Family Jerrycan", price: "₦14,500" }
+        ]
+      },
+      {
+        id: "yellowpap",
+        name: "Sweet Yellow Corn Pap",
+        category: "Yolanda Pap",
+        tagline: "Sweet • Nutritious • Energizing Breakfast",
+        icon: "🥣",
+        mediaClass: "media-yellowpap",
+        sourcing: "Stone-ground and wet-milled from premium sweet yellow maize grains, following Yolanda Foods' traditional hygiene protocol.",
+        benefits: "High in clean carbohydrates for sustained daily energy. Loaded with Vitamins A, B, and E. Gentle and soothing on digestion.",
+        storage: "Store in a refrigerator or change cold water daily if stored at room temperature to preserve fresh fermentation aroma.",
+        packaging: "Hygienically packed in airtight vacuum-sealed tubs with inner protective food wrap.",
+        variants: [
+          { size: "1kg Vacuum-Sealed Tub", price: "₦2,200" },
+          { size: "2kg Family Value Tub", price: "₦4,000" }
+        ]
+      },
+      {
+        id: "brownpap",
+        name: "Brown Guinea Corn (Ogi Baba) Pap",
+        category: "Yolanda Pap",
+        tagline: "Traditional • High-Fiber • Superfood Classic",
+        icon: "🌾",
+        mediaClass: "media-brownpap",
+        sourcing: "Naturally fermented from selected brown guinea corn (Sorghum). Highly celebrated in the official Yolanda Foods Pap flyer.",
+        benefits: "Remarkably high in dietary fiber for optimal gut motility. Aids blood sugar management. Packed with bioavailable iron and magnesium.",
+        storage: "Keep submerged in clean cold water in the refrigerator, or change water every 24 hours.",
+        packaging: "Airtight vacuum-sealed food-grade tub.",
+        variants: [
+          { size: "1kg Vacuum-Sealed Tub", price: "₦2,500" },
+          { size: "2kg Family Value Tub", price: "₦4,600" }
+        ]
+      },
+      {
+        id: "whitepap",
+        name: "Pure White Corn Pap",
+        category: "Yolanda Pap",
+        tagline: "Mild • Smooth • Wholesome",
+        icon: "🌽",
+        mediaClass: "media-whitepap",
+        sourcing: "Milled from clean white corn grains with gentle, natural lactic fermentation for a pleasant, mild breakfast aroma.",
+        benefits: "High in calcium for strong bones and teeth. Light, soothing, and easily digestible—perfect pairing with akara or fried plantains.",
+        storage: "Keep cold in the refrigerator; stays fresh and creamy for up to 3 weeks.",
+        packaging: "Airtight vacuum-sealed tub.",
+        variants: [
+          { size: "1kg Vacuum-Sealed Tub", price: "₦2,000" },
+          { size: "2kg Family Value Tub", price: "₦3,800" }
+        ]
+      },
+      {
+        id: "groundnut",
+        name: "Roasted Golden Groundnuts",
+        category: "Healthy Snacks",
+        tagline: "Crunchy, Lightly Salted Hand-Selected Peanuts",
+        icon: "🥜",
+        mediaClass: "media-groundnut",
+        sourcing: "Hand-sorted in small batches to remove hollow or bitter nuts. Dry-roasted over even heat with light sea salt.",
+        benefits: "Excellent source of plant-based protein, healthy monounsaturated fats, and niacin (Vitamin B3) for brain vitality.",
+        storage: "Keep lid tightly closed in an airtight jar to preserve maximum crisp crunch in humid Lagos weather.",
+        packaging: "Heavy-duty clear airtight jar with safety induction seal.",
+        variants: [
+          { size: "400g Airtight Jar", price: "₦2,000" },
+          { size: "800g Value Pouch", price: "₦3,800" }
+        ]
+      },
+      {
+        id: "sweetpot",
+        name: "Farm-Fresh Sweet Potatoes",
+        category: "Tubers & Roots",
+        tagline: "Naturally Sweet Orange & Red Highland Tubers",
+        icon: "🍠",
+        mediaClass: "media-sweetpot",
+        sourcing: "Freshly harvested from organic loamy soil farms. Hand-selected for firm density with zero spongy cores.",
+        benefits: "Loaded with beta-carotene, Vitamin C, and slow-burning complex carbs for lasting energy without fatigue.",
+        storage: "Store in a well-ventilated dry basket or mesh bag. Do not store in closed plastic bags or refrigerators.",
+        packaging: "Breathable agricultural mesh sacks that allow continuous air circulation.",
+        variants: [
+          { size: "5kg Kitchen Bag", price: "₦4,200" },
+          { size: "10kg Family Sack", price: "₦8,000" },
+          { size: "Half Bag (Bulk)", price: "₦19,500" }
+        ]
+      },
+      {
+        id: "irishpot",
+        name: "Premium Irish Potatoes",
+        category: "Tubers & Roots",
+        tagline: "Firm, Clean Highland-Grown Tubers",
+        icon: "🥔",
+        mediaClass: "media-irishpot",
+        sourcing: "Highland-grown Irish potatoes with thin golden skins and firm, starchy flesh.",
+        benefits: "High in potassium (supports healthy blood pressure), dietary fiber, and Vitamin B6.",
+        storage: "Keep in a dark, dry, cool place to prevent sprouting. Keep separate from onions.",
+        packaging: "Clean breathable mesh bag.",
+        variants: [
+          { size: "5kg Mesh Bag", price: "₦5,500" },
+          { size: "10kg Pantry Bag", price: "₦10,500" },
+          { size: "Half Bag (Bulk)", price: "₦24,000" }
+        ]
+      },
+      {
+        id: "onions",
+        name: "Fresh Dry-Skin Onions",
+        category: "Fresh Produce & Citrus",
+        tagline: "Pungent & Aromatic (Red & White Mix)",
+        icon: "🧅",
+        mediaClass: "media-onions",
+        sourcing: "Properly dried and sun-cured with crisp papery skins that naturally resist early rotting in coastal weather.",
+        benefits: "Rich in quercetin and organosulfur compounds supporting heart health and natural immunity.",
+        storage: "Store in a dry, open wire basket with free airflow. Never store in airtight plastic containers.",
+        packaging: "Ventilated mesh sack.",
+        variants: [
+          { size: "3kg Small Basket", price: "₦3,800" },
+          { size: "7kg Medium Sack", price: "₦8,500" },
+          { size: "Half Bag (Bulk)", price: "₦21,000" }
+        ]
+      },
+      {
+        id: "limes",
+        name: "Fresh Juicy Limes",
+        category: "Fresh Produce & Citrus",
+        tagline: "Farm-Picked Organic Green Citrus",
+        icon: "🍋",
+        mediaClass: "media-lime",
+        sourcing: "Hand-picked from organic citrus orchards, heavy with natural juice.",
+        benefits: "High concentration of citric acid and Vitamin C for natural detox and digestive stimulation.",
+        storage: "Can be kept at room temperature for 10 days, or refrigerated in a crisper drawer for up to 4 weeks.",
+        packaging: "Perforated produce bag.",
+        variants: [
+          { size: "Small Basket (~15 pcs)", price: "₦1,500" },
+          { size: "Medium Pack (~30 pcs)", price: "₦2,800" }
+        ]
+      }
+    ];
+
+    function renderGrid() {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = modalData.map(p => `
+        <div class="product-card">
+          <div class="card-media ${p.mediaClass}">
+            <div style="font-size: 56px;">${p.icon}</div>
+            <span class="badge-top-left">🌿 Quality Assured</span>
+            <span class="badge-flyer">Lagos Stock</span>
+          </div>
+          <div class="card-body">
+            <span class="card-cat">${p.category}</span>
+            <h3 class="card-title">${p.name}</h3>
+            <div class="card-tagline">${p.tagline}</div>
+            <button class="btn-quick-view" onclick="openModal('${p.id}')">
+              <span>🔍 Quick-View Details</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModal(id) {
+      const item = modalData.find(p => p.id === id);
+      if (!item) return;
+
+      document.getElementById('modalMedia').className = `modal-media-banner ${item.mediaClass}`;
+      document.getElementById('modalIcon').textContent = item.icon;
+      document.getElementById('modalCategory').textContent = item.category;
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalTagline').textContent = item.tagline;
+
+      document.getElementById('modalSourcing').textContent = item.sourcing;
+      document.getElementById('modalBenefits').textContent = item.benefits;
+      document.getElementById('modalStorage').textContent = item.storage;
+      document.getElementById('modalPackaging').textContent = item.packaging;
+
+      // Populate pricing rows
+      const pricingContainer = document.getElementById('modalPricingRows');
+      pricingContainer.innerHTML = item.variants.map(v => `
+        <div class="price-row">
+          <span class="row-size-name">${v.size}</span>
+          <span class="row-price-tag">${v.price}</span>
+        </div>
+      `).join('');
+
+      // WhatsApp Button Hook
+      const waLink = `https://wa.me/2347040275628?text=Hello%20Yolanda%20Foods%2C%20I%20am%20interested%20in%20ordering%20${encodeURIComponent(item.name)}`;
+      document.getElementById('modalWaBtn').href = waLink;
+
+      document.getElementById('productModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'productModal') {
+        closeModal();
+      }
+    }
+
+    // ESC key close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    renderGrid();
+  </script>
+</body>
+</html>
