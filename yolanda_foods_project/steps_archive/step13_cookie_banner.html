@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 13: Privacy Cookie Banner & Consent Preferences</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding-bottom: 140px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wrapper {
+      max-width: 1000px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .main-title {
+      font-family: var(--font-display);
+      font-size: 30px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .main-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Simulation Control Box */
+    .sim-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DE;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 18px rgba(18, 78, 40, 0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .status-text {
+      font-size: 13px;
+      color: #2D3E32;
+    }
+
+    .btn-reset {
+      background: #F1F5F2;
+      border: 1.5px solid #CCDCD0;
+      color: var(--primary-dark);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ========================================================
+       ELEGANT COOKIE CONSENT BANNER (DEMURE & COMPLIANT)
+       ======================================================== */
+    .cookie-banner-wrap {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      max-width: 620px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1.5px solid #CFE0D3;
+      border-radius: 22px;
+      padding: 22px 24px;
+      box-shadow: 0 16px 45px rgba(10, 33, 19, 0.16);
+      z-index: 999990;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: bannerSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes bannerSlideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .cb-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .cb-icon {
+      font-size: 28px;
+      line-height: 1;
+      padding: 8px;
+      background: #EAF8EE;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .cb-content h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .cb-content p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .cb-content a {
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cb-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn-cb {
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-cb-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .btn-cb-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-cb-outline {
+      background: transparent;
+      border: 1.5px solid #CCDCD0;
+      color: var(--primary-dark);
+    }
+
+    .btn-cb-outline:hover {
+      background: #F1F6F2;
+    }
+
+    /* Preferences Drawer / Modal */
+    .pref-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 33, 19, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s;
+    }
+
+    .pref-modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .pref-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+
+    .pref-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .pref-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #EBF1ED;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .pref-info h5 {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 2px;
+    }
+
+    .pref-info p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Switch toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #D2DFD6;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    input:disabled + .slider {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 13 of 15 Vetting</span>
+      <span><strong>Cookie Consent Banner & Local Storage Preferences</strong></span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Active WhatsApp Order Line: 07040275628</div>
+  </div>
+
+  <div class="wrapper">
+    <div class="header-box">
+      <h1 class="main-title">Cookie & Local Storage Preferences</h1>
+      <p class="main-desc">
+        Non-intrusive, privacy-first consent banner designed to retain customer carts and Lagos delivery zones locally without surveillance tracking.
+      </p>
+    </div>
+
+    <!-- Simulator Controller -->
+    <div class="sim-card">
+      <div>
+        <div style="font-weight: 800; font-size: 14px; color: var(--primary-dark);">Current Stored Consent Status:</div>
+        <div class="status-text" id="consentStatusDisplay">Status: <strong>Checking local storage...</strong></div>
+      </div>
+      <button class="btn-reset" onclick="resetCookieConsent()">
+        🔄 Reset Consent & Reopen Banner
+      </button>
+    </div>
+
+    <!-- Educational breakdown -->
+    <div style="background: #FFFFFF; border: 1.5px solid #DCE6DE; border-radius: 20px; padding: 26px; line-height: 1.6; font-size: 13.5px; color: #2D3E32;">
+      <h3 style="font-family: var(--font-display); font-size: 18px; color: var(--primary-dark); margin-bottom: 8px;">
+        Why Yolanda Foods Uses Cookies & Local Storage:
+      </h3>
+      <p style="margin-bottom: 10px;">
+        Unlike aggressive commercial ad trackers, Yolanda Foods uses lightweight client-side storage strictly for functional pantry shopping:
+      </p>
+      <ul style="padding-left: 20px; margin-bottom: 12px;">
+        <li><strong>Persistent Cart Storage:</strong> Remembers your chosen honey, palm oil, or pap tubs even if you close the browser tab.</li>
+        <li><strong>Saved Lagos Delivery Zone:</strong> Remembers your preferred delivery area (e.g., Lekki, Ikeja) to save you re-typing fees on repeat visits.</li>
+        <li><strong>No Third-Party Ad Pixels:</strong> We do not track your browsing habits across external websites.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COOKIE CONSENT BANNER -->
+  <div class="cookie-banner-wrap" id="cookieBanner">
+    <div class="cb-top">
+      <div class="cb-icon">🍪</div>
+      <div class="cb-content">
+        <h4>We Respect Your Pantry & Privacy</h4>
+        <p>
+          We use essential local cookies to save your active shopping cart, retain selected tub sizes, and calculate your Lagos delivery rate accurately. No invasive tracking ads. Learn more in our <a onclick="alert('Opens Privacy Policy Modal!')">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+    <div class="cb-actions">
+      <button class="btn-cb btn-cb-outline" onclick="openPrefModal()">Customize</button>
+      <button class="btn-cb btn-cb-outline" onclick="acceptEssentialOnly()">Essential Only</button>
+      <button class="btn-cb btn-cb-primary" onclick="acceptAllCookies()">Accept All</button>
+    </div>
+  </div>
+
+  <!-- CUSTOMIZE PREFERENCES MODAL -->
+  <div class="pref-modal-backdrop" id="prefModal" onclick="closePrefOnBackdrop(event)">
+    <div class="pref-card">
+      <h3 class="pref-title">Cookie & Storage Preferences</h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">
+        Configure what Yolanda Foods is permitted to store on your device:
+      </p>
+
+      <!-- Essential -->
+      <div class="pref-item">
+        <div class="pref-info">
+          <h5>Essential Shopping Cookies (Always Active)</h5>
+          <p>Required to maintain your cart contents, quantities, and selected delivery zone during checkout.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked disabled>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Functional Preferences -->
+      <div class="pref-item">
+        <div class="pref-info">
+          <h5>Saved Order Preferences</h5>
+          <p>Saves your preferred WhatsApp phone and delivery address for quicker one-click checkout on your next visit.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="prefSavedInfo" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Analytics -->
+      <div class="pref-item" style="border-bottom: none;">
+        <div class="pref-info">
+          <h5>Anonymous Store Performance</h5>
+          <p>Helps us discover which farm products are most popular across Lagos neighborhoods.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="prefAnalytics">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px;">
+        <button class="btn-cb btn-cb-outline" onclick="closePrefModal()">Cancel</button>
+        <button class="btn-cb btn-cb-primary" onclick="saveCustomPreferences()">Save My Choices</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const COOKIE_STORAGE_KEY = 'yolanda_cookie_consent_v1';
+
+    function initCookieBanner() {
+      const stored = localStorage.getItem(COOKIE_STORAGE_KEY);
+      const banner = document.getElementById('cookieBanner');
+      const display = document.getElementById('consentStatusDisplay');
+
+      if (!stored) {
+        banner.style.display = 'flex';
+        display.innerHTML = `Status: <span style="color: #D93838; font-weight: 800;">Pending (Banner Visible)</span>`;
+      } else {
+        banner.style.display = 'none';
+        const parsed = JSON.parse(stored);
+        display.innerHTML = `Status: <span style="color: #124E28; font-weight: 800;">Consent Granted (${parsed.mode})</span> on ${parsed.date}`;
+      }
+    }
+
+    function acceptAllCookies() {
+      const payload = {
+        mode: 'All Accepted',
+        essential: true,
+        savedInfo: true,
+        analytics: true,
+        date: new Date().toLocaleDateString()
+      };
+      localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(payload));
+      document.getElementById('cookieBanner').style.display = 'none';
+      initCookieBanner();
+    }
+
+    function acceptEssentialOnly() {
+      const payload = {
+        mode: 'Essential Only',
+        essential: true,
+        savedInfo: false,
+        analytics: false,
+        date: new Date().toLocaleDateString()
+      };
+      localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(payload));
+      document.getElementById('cookieBanner').style.display = 'none';
+      initCookieBanner();
+    }
+
+    function saveCustomPreferences() {
+      const savedInfo = document.getElementById('prefSavedInfo').checked;
+      const analytics = document.getElementById('prefAnalytics').checked;
+      const payload = {
+        mode: 'Custom Preferences',
+        essential: true,
+        savedInfo: savedInfo,
+        analytics: analytics,
+        date: new Date().toLocaleDateString()
+      };
+      localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(payload));
+      closePrefModal();
+      document.getElementById('cookieBanner').style.display = 'none';
+      initCookieBanner();
+    }
+
+    function resetCookieConsent() {
+      localStorage.removeItem(COOKIE_STORAGE_KEY);
+      initCookieBanner();
+    }
+
+    function openPrefModal() {
+      document.getElementById('prefModal').classList.add('open');
+    }
+
+    function closePrefModal() {
+      document.getElementById('prefModal').classList.remove('open');
+    }
+
+    function closePrefOnBackdrop(e) {
+      if (e.target.id === 'prefModal') closePrefModal();
+    }
+
+    // Run on load
+    initCookieBanner();
+  </script>
+</body>
+</html>

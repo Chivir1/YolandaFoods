@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 7: Product Cards & Interactive Grid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --accent-gold-dark: #A17006;
+      --accent-red: #D93838;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-friendly: 'Fredoka', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      padding-bottom: 120px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .catalog-wrapper {
+      max-width: 1280px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    /* Section Title */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Cart Toast Bar */
+    .cart-status-bar {
+      background: #FFFFFF;
+      border: 1.5px solid #CFDEC2;
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 14px rgba(18, 78, 40, 0.05);
+    }
+
+    .cart-summary-text {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-badge {
+      background: var(--accent-gold);
+      color: #0A3319;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    /* ========================================================
+       STEP 7: INTERACTIVE PRODUCT CARDS GRID
+       ======================================================== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE7DE;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(18, 78, 40, 0.04);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .product-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(18, 78, 40, 0.1);
+    }
+
+    /* Visual Media Thumbnail Area */
+    .card-media {
+      height: 180px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Authentic SVG Pattern Visuals */
+    .media-honey { background: radial-gradient(circle at 30% 30%, #FFEFC2 0%, #F5CE68 100%); }
+    .media-palmoil { background: radial-gradient(circle at 30% 30%, #FFD2CC 0%, #E64A38 100%); }
+    .media-yellowpap { background: radial-gradient(circle at 30% 30%, #FFF2B2 0%, #E8B923 100%); }
+    .media-brownpap { background: radial-gradient(circle at 30% 30%, #EBD4BE 0%, #A06D3B 100%); }
+    .media-whitepap { background: radial-gradient(circle at 30% 30%, #FFFFFF 0%, #E0E8E2 100%); }
+    .media-groundnut { background: radial-gradient(circle at 30% 30%, #FBE6C2 0%, #D49B43 100%); }
+    .media-sweetpot { background: radial-gradient(circle at 30% 30%, #FFD6B8 0%, #D96E2E 100%); }
+    .media-irishpot { background: radial-gradient(circle at 30% 30%, #F5E8C8 0%, #BFA054 100%); }
+    .media-onions { background: radial-gradient(circle at 30% 30%, #F3D2DF 0%, #9B2D5D 100%); }
+    .media-lime { background: radial-gradient(circle at 30% 30%, #E2FDC8 0%, #5EB81F 100%); }
+
+    .food-svg-illustration {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Quality Tags */
+    .badge-top-left {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #FFFFFF;
+      color: var(--primary-dark);
+      border: 1px solid rgba(18, 78, 40, 0.2);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .badge-flyer {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--accent-gold);
+      color: #0A3319;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Card Content Body */
+    .card-body {
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-category-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .card-tagline {
+      font-size: 12px;
+      color: var(--accent-gold-dark);
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .card-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+
+    /* Variant / Size Selector */
+    .variant-selector-wrap {
+      margin-bottom: 14px;
+      background: #F8FAF8;
+      border: 1px solid #DDE6DF;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .variant-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #617768;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .variant-select {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1.5px solid #CCDCD0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .variant-select:focus {
+      border-color: var(--primary-light);
+    }
+
+    /* Price & Action Row */
+    .card-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid #EAF0EC;
+    }
+
+    .price-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-small-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #83978A;
+      text-transform: uppercase;
+    }
+
+    .price-amount {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      font-family: var(--font-friendly);
+    }
+
+    /* Quantity Stepper */
+    .qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      background: #F1F6F2;
+      border: 1.5px solid #CFDEC2;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      background: transparent;
+      border: none;
+      width: 28px;
+      height: 32px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .qty-btn:hover {
+      background: #E2ECE5;
+    }
+
+    .qty-val {
+      width: 26px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    /* Add To Cart Button */
+    .btn-add-cart {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(18, 78, 40, 0.2);
+    }
+
+    .btn-add-cart:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-add-cart:active {
+      transform: scale(0.97);
+    }
+
+    /* Secondary Quick Buttons (WhatsApp / Quick View) */
+    .quick-links-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 10px;
+      font-size: 12px;
+    }
+
+    .link-action {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .link-action:hover {
+      text-decoration: underline;
+    }
+
+    .link-wa {
+      color: #128C7E;
+    }
+    /* Quiet, familiar storefront basket affordance. The page, not a drawer, holds the order. */
+    .floating-cart { position:fixed; right:clamp(16px,3vw,32px); bottom:clamp(16px,3vw,30px); z-index:900; width:54px; height:54px; border-radius:999px; border:1px solid rgba(255,255,255,.2); background:#123d24; color:#fff; box-shadow:0 7px 22px rgba(8,39,21,.22); display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; transition:transform .2s,background .2s,box-shadow .2s,width .3s cubic-bezier(.34,1.4,.64,1),padding .3s; overflow:visible; }
+    .floating-cart.has-items { width:auto; padding:0 20px 0 15px; gap:10px; }
+    .floating-cart .float-icon { position:relative; width:24px; height:24px; flex:none; display:grid; place-items:center; }
+    .floating-cart:hover { transform:translateY(-3px);background:#1b6135;box-shadow:0 10px 26px rgba(8,39,21,.25) }
+    .floating-cart:focus-visible, .cart-page button:focus-visible, .cart-page a:focus-visible {outline:3px solid #dca939;outline-offset:3px}
+    .floating-cart svg {width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .floating-cart .float-count {position:absolute;right:-9px;top:-10px;min-width:19px;height:19px;padding:0 4px;border-radius:20px;background:#e9b644;border:2px solid #f7faf6;color:#163522;font:800 10px/15px var(--font-sans);text-align:center;transform:scale(0);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+    .floating-cart.has-items .float-count {transform:scale(1)}
+    .floating-cart .float-amount {max-width:0;overflow:hidden;white-space:nowrap;opacity:0;font:800 13.5px/1 var(--font-sans);color:#e9b644;letter-spacing:.2px;transition:max-width .35s cubic-bezier(.34,1.4,.64,1),opacity .25s}
+    .floating-cart.has-items .float-amount {max-width:160px;opacity:1}
+    .cart-toast {position:fixed;right:clamp(16px,3vw,32px);bottom:clamp(80px,3vw + 64px,100px);z-index:899;background:#fff;border:1px solid #d9e4d9;border-radius:9px;box-shadow:0 5px 20px rgba(15,53,28,.13);color:#163522;padding:10px 14px;font-size:12px;font-weight:700;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .22s,transform .22s}
+    .cart-toast.show {opacity:1;transform:none}
+    [hidden] {display:none !important}
+    .cart-page {max-width:1080px;margin:0 auto;padding:44px 24px 110px;min-height:75vh}
+    .cart-back {display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:#245a33;font:700 13px var(--font-sans);cursor:pointer;padding:4px 0;margin-bottom:28px}
+    .cart-page-head {border-bottom:1px solid #d9e4d9;padding-bottom:24px;margin-bottom:28px}
+    .cart-kicker {font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:800;color:#68806a;margin-bottom:10px}
+    .cart-page h1 {font:700 clamp(32px,4vw,48px)/1.12 var(--font-display);color:#0a3319;margin-bottom:9px}
+    .cart-page-head p {font-size:14px;color:#536b5a;line-height:1.6}
+    .cart-columns {display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:28px;align-items:start}
+    .cart-list {display:grid;gap:12px}
+    .cart-line {background:#fff;border:1px solid #dce7de;border-radius:14px;padding:18px;display:flex;gap:16px;align-items:center}
+    .cart-line-icon {width:58px;height:58px;flex:0 0 58px;border-radius:11px;background:#f4f0df;display:grid;place-items:center;font-size:28px}
+    .cart-line-main {flex:1;min-width:0}.cart-line h3 {font-size:15px;color:#0a3319;margin-bottom:4px}.cart-line p {font-size:12px;color:#647368;line-height:1.5}
+    .cart-line-bottom {margin-top:11px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .cart-line-bottom strong {font-size:14px;color:#0a3319}
+    .cart-line-bottom .qty-stepper {margin-left:auto}.remove-line {border:0;background:none;color:#82574b;font:600 11px var(--font-sans);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+    .cart-summary {background:#fff;border:1px solid #dce7de;border-radius:14px;padding:24px;position:sticky;top:24px}
+    .cart-summary h2 {font:700 21px var(--font-display);color:#0a3319;margin-bottom:22px}
+    .summary-row {display:flex;justify-content:space-between;gap:16px;font-size:13px;color:#536b5a;margin-bottom:14px}.summary-row strong {color:#0a3319}
+    .summary-divider {height:1px;background:#dce7de;margin:20px 0}.summary-total {font-size:16px;font-weight:800;color:#0a3319}
+    .summary-note {font-size:11px;color:#637669;line-height:1.6;margin:16px 0 20px}
+    .cart-wa {display:flex;align-items:center;justify-content:center;width:100%;padding:13px 10px;border-radius:9px;background:#174b2a;color:#fff;text-decoration:none;font-size:12px;font-weight:800;text-align:center}.cart-wa:hover{background:#22643a}
+    .cart-wa.disabled {pointer-events:none;opacity:.48}
+    .empty-cart {background:#fff;border:1px solid #dce7de;border-radius:14px;text-align:center;padding:65px 20px}.empty-cart svg {width:39px;height:39px;stroke:#52765b;fill:none;stroke-width:1.5;margin-bottom:18px}.empty-cart h2 {font:700 25px var(--font-display);color:#0a3319;margin-bottom:8px}.empty-cart p {color:#637669;font-size:13px;margin-bottom:21px}
+    .shop-again {background:#164b29;color:#fff;border:0;border-radius:8px;padding:12px 19px;font:700 12px var(--font-sans);cursor:pointer}
+    @media(max-width:700px){.vetting-bar{font-size:10px;gap:10px}.vetting-bar>div:last-child{display:none}.cart-columns{grid-template-columns:1fr}.cart-summary{position:static}.cart-line{align-items:flex-start}.cart-line-bottom .qty-stepper{margin-left:0}}
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 7 of 15 Vetting</span>
+      <span><strong>Product Cards & Interactive Grid</strong> (Variants, Quantities & Live Cart)</span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Testing WhatsApp Line: 07040275628</div>
+  </div>
+
+  <main class="catalog-wrapper" id="shopView">
+    <!-- Header -->
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">Fresh Lagos Farm Storefront</h1>
+        <p class="section-sub">Select packaging units and quantities for doorstep delivery across Lagos.</p>
+      </div>
+
+      <!-- Live Cart Indicator Bar -->
+      <div class="cart-status-bar">
+        <div class="cart-summary-text">
+          <span>🛒 Selected Order Items:</span>
+          <span class="cart-badge" id="cartCountBadge">0 items</span>
+        </div>
+        <div style="font-size: 13.5px; font-weight: 800; color: var(--primary);">
+          Subtotal: <span id="cartSubtotalText">₦0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+      <!-- Injected dynamically via JS with interactive variants & steppers -->
+    </div>
+  </main>
+
+  <section class="cart-page" id="cartView" aria-label="Your basket" hidden>
+    <button class="cart-back" type="button" onclick="goToShop()">← Continue shopping</button>
+    <div class="cart-page-head">
+      <div class="cart-kicker">Yolanda Foods / Your basket</div>
+      <h1>Your basket<span style="color:#bc8840">.</span></h1>
+      <p>Review your farm picks before sending your order enquiry. Delivery is within Lagos.</p>
+    </div>
+    <div class="cart-columns">
+      <div class="cart-list" id="cartLines" aria-live="polite"></div>
+      <aside class="cart-summary">
+        <h2>Order summary</h2>
+        <div class="summary-row"><span>Items</span><strong id="summaryItems">0</strong></div>
+        <div class="summary-row"><span>Delivery</span><span>Confirmed on WhatsApp</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row summary-total"><span>Subtotal</span><span id="summaryTotal">₦0</span></div>
+        <p class="summary-note">Prices shown are draft estimates. We’ll confirm availability, final pricing and delivery fees before you pay. Sending this enquiry does not place an order automatically.</p>
+        <a class="cart-wa disabled" id="sendEnquiry" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">Send basket via WhatsApp ↗</a>
+      </aside>
+    </div>
+  </section>
+
+  <button class="floating-cart" id="floatingCart" type="button" onclick="goToCart()" aria-label="View basket, 0 items" title="View basket">
+    <span class="float-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.3 10.2a2 2 0 0 0 2 1.6h9.1a2 2 0 0 0 2-1.6L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="19" cy="20" r="1"/></svg>
+      <span class="float-count" id="floatingCount">0</span>
+    </span>
+    <span class="float-amount" id="floatCartAmount">₦0</span>
+  </button>
+  <div class="cart-toast" id="cartToast" role="status" aria-live="polite">Added to your basket</div>
+
+  <script>
+    // Full Product Database with Authentic Sizes & Pricing (₦)
+    const products = [
+      {
+        id: "honey",
+        name: "Pure Honey",
+        category: "Pure Honey & Oils",
+        tagline: "100% Unadulterated, Unfiltered Natural Sweetener",
+        desc: "Sourced direct from natural apiaries. Free from corn syrups and refined sugars. Rich in natural enzymes & pollen.",
+        badge: "100% Raw Honey",
+        flyerBadge: "Pure Apiary",
+        mediaClass: "media-honey",
+        icon: "🍯",
+        variants: [
+          { label: "500ml Glass Bottle", price: 4500 },
+          { label: "1 Litre Food-Grade Bottle", price: 8500 },
+          { label: "2 Litre Bulk Family Jug", price: 16000 }
+        ]
+      },
+      {
+        id: "palmoil",
+        name: "Palm Oil",
+        category: "Pure Honey & Oils",
+        tagline: "Cold-Pressed, Thick Red Palm Oil",
+        desc: "Extracted from freshly harvested ripe oil palm fruit using traditional presses. Zero Sudan dye, zero water dilution.",
+        badge: "Cold-Pressed",
+        flyerBadge: "Zero Additives",
+        mediaClass: "media-palmoil",
+        icon: "🌴",
+        variants: [
+          { label: "1 Litre Sealed Bottle", price: 3200 },
+          { label: "2 Litre Canister", price: 6000 },
+          { label: "5 Litre Family Jerrycan", price: 14500 }
+        ]
+      },
+      {
+        id: "yellowpap",
+        name: "Sweet Yellow Corn Pap",
+        category: "Yolanda Pap",
+        tagline: "Sweet • Nutritious • Energizing Breakfast",
+        desc: "Naturally sweet and tasty with a smooth, velvety texture. Rich in Vitamins A, B & E. Keeps you active and energized.",
+        badge: "Farm Flyer Classic",
+        flyerBadge: "Smooth Texture",
+        mediaClass: "media-yellowpap",
+        icon: "🥣",
+        variants: [
+          { label: "1kg Vacuum-Sealed Tub", price: 2200 },
+          { label: "2kg Family Value Tub", price: 4000 }
+        ]
+      },
+      {
+        id: "brownpap",
+        name: "Brown Guinea Corn (Ogi Baba) Pap",
+        category: "Yolanda Pap",
+        tagline: "Traditional • High-Fiber • Superfood Classic",
+        desc: "Naturally fermented with a deep earthy flavor. High in dietary fiber for optimal digestion and blood sugar management.",
+        badge: "High-Fiber",
+        flyerBadge: "Nature's Superfood",
+        mediaClass: "media-brownpap",
+        icon: "🌾",
+        variants: [
+          { label: "1kg Vacuum-Sealed Tub", price: 2500 },
+          { label: "2kg Family Value Tub", price: 4600 }
+        ]
+      },
+      {
+        id: "whitepap",
+        name: "Pure White Corn Pap",
+        category: "Yolanda Pap",
+        tagline: "Mild • Smooth • Wholesome",
+        desc: "Smooth and soft with a pleasant taste. Premium source of clean carbohydrates and calcium for strong bones and teeth.",
+        badge: "Soothing & Mild",
+        flyerBadge: "Pure Wholesome",
+        mediaClass: "media-whitepap",
+        icon: "🌽",
+        variants: [
+          { label: "1kg Vacuum-Sealed Tub", price: 2000 },
+          { label: "2kg Family Value Tub", price: 3800 }
+        ]
+      },
+      {
+        id: "groundnut",
+        name: "Roasted Golden Groundnuts",
+        category: "Healthy Snacks",
+        tagline: "Crunchy, Lightly Salted Peanuts",
+        desc: "Hand-sorted and uniformly roasted to a golden crunch. The quintessential companion for freshly prepared Yolanda Pap.",
+        badge: "Hand-Selected",
+        flyerBadge: "Golden Crunch",
+        mediaClass: "media-groundnut",
+        icon: "🥜",
+        variants: [
+          { label: "400g Airtight Jar", price: 2000 },
+          { label: "800g Value Pouch", price: 3800 }
+        ]
+      },
+      {
+        id: "sweetpot",
+        name: "Farm-Fresh Sweet Potatoes",
+        category: "Tubers & Roots",
+        tagline: "Naturally Sweet Orange & Red Tubers",
+        desc: "Clean, firm highland tubers harvested from loamy soils. Zero spongy cores. High in beta-carotene and dietary fiber.",
+        badge: "Sun-Ripened",
+        flyerBadge: "Firm Tubers",
+        mediaClass: "media-sweetpot",
+        icon: "🍠",
+        variants: [
+          { label: "5kg Kitchen Bag", price: 4200 },
+          { label: "10kg Family Sack", price: 8000 },
+          { label: "Half Bag (Bulk)", price: 19500 }
+        ]
+      },
+      {
+        id: "irishpot",
+        name: "Premium Irish Potatoes",
+        category: "Tubers & Roots",
+        tagline: "Firm, Clean Highland-Grown Tubers",
+        desc: "Highland-grown with thin golden skins and firm flesh. Boils, bakes, and fries to a fluffy, golden perfection.",
+        badge: "Highland Grown",
+        flyerBadge: "Starchy Gold",
+        mediaClass: "media-irishpot",
+        icon: "🥔",
+        variants: [
+          { label: "5kg Mesh Bag", price: 5500 },
+          { label: "10kg Pantry Bag", price: 10500 },
+          { label: "Half Bag (Bulk)", price: 24000 }
+        ]
+      },
+      {
+        id: "onions",
+        name: "Fresh Dry-Skin Onions",
+        category: "Fresh Produce & Citrus",
+        tagline: "Pungent & Aromatic (Red & White Mix)",
+        desc: "Properly cured to resist early rotting. Sharp aromatic punch and high moisture for your soups, stews, and sauces.",
+        badge: "Cured & Dry-Skin",
+        flyerBadge: "Long-Lasting",
+        mediaClass: "media-onions",
+        icon: "🧅",
+        variants: [
+          { label: "3kg Small Basket", price: 3800 },
+          { label: "7kg Medium Sack", price: 8500 },
+          { label: "Half Bag (Bulk)", price: 21000 }
+        ]
+      },
+      {
+        id: "limes",
+        name: "Fresh Juicy Limes",
+        category: "Fresh Produce & Citrus",
+        tagline: "Farm-Picked Organic Green Citrus",
+        desc: "Hand-picked organic limes heavy with juice. Loaded with Vitamin C. Perfect for morning detox water and natural seasoning.",
+        badge: "High Citrus",
+        flyerBadge: "Juicy Green",
+        mediaClass: "media-lime",
+        icon: "🍋",
+        variants: [
+          { label: "Small Basket (~15 pcs)", price: 1500 },
+          { label: "Medium Pack (~30 pcs)", price: 2800 }
+        ]
+      }
+    ];
+
+    // Card State Management (Selected variant & quantity per item)
+    const cardStates = {};
+    const STORAGE_KEY = 'yolanda_step7_test_basket';
+    let cart = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      if (Array.isArray(saved)) cart = saved.filter(c => products.some(p => p.id === c.id && p.variants.some(v => v.label === c.variantLabel)) && Number.isInteger(c.qty) && c.qty > 0 && c.qty <= 50);
+    } catch (e) { cart = []; }
+    const money = value => `₦${value.toLocaleString('en-NG')}`;
+    function saveCart() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch(e) {} }
+
+    function initCardStates() {
+      products.forEach(p => {
+        cardStates[p.id] = {
+          variantIndex: 0,
+          qty: 1
+        };
+      });
+    }
+
+    function renderCards() {
+      const grid = document.getElementById('productGrid');
+
+      grid.innerHTML = products.map(p => {
+        const state = cardStates[p.id];
+        const selectedVariant = p.variants[state.variantIndex];
+        const currentTotal = selectedVariant.price * state.qty;
+
+        return `
+          <div class="product-card" id="card-${p.id}">
+            <!-- Media Visual Banner -->
+            <div class="card-media ${p.mediaClass}">
+              <div style="font-size: 64px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));">${p.icon}</div>
+              <span class="badge-top-left">🌿 ${p.badge}</span>
+              <span class="badge-flyer">${p.flyerBadge}</span>
+            </div>
+
+            <!-- Content Area -->
+            <div class="card-body">
+              <span class="card-category-label">${p.category}</span>
+              <h3 class="card-title">${p.name}</h3>
+              <div class="card-tagline">${p.tagline}</div>
+              <p class="card-desc">${p.desc}</p>
+
+              <!-- Size & Packaging Dropdown -->
+              <div class="variant-selector-wrap">
+                <label class="variant-label">Choose Size / Package:</label>
+                <select class="variant-select" onchange="updateVariant('${p.id}', this.value)">
+                  ${p.variants.map((v, idx) => `
+                    <option value="${idx}" ${idx === state.variantIndex ? 'selected' : ''}>
+                      ${v.label} — ₦${v.price.toLocaleString()}
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
+
+              <!-- Price & Quantity Row -->
+              <div class="card-action-row">
+                <div class="price-box">
+                  <span class="price-small-label">Unit Price</span>
+                  <span class="price-amount" id="price-${p.id}">₦${selectedVariant.price.toLocaleString()}</span>
+                </div>
+
+                <!-- Quantity Stepper -->
+                <div class="qty-stepper">
+                  <button class="qty-btn" onclick="adjustQty('${p.id}', -1)" title="Decrease Quantity">-</button>
+                  <span class="qty-val" id="qty-${p.id}">${state.qty}</span>
+                  <button class="qty-btn" onclick="adjustQty('${p.id}', 1)" title="Increase Quantity">+</button>
+                </div>
+
+                <!-- Add Button -->
+                <button class="btn-add-cart" onclick="addToCart('${p.id}')">
+                  <span>Add</span>
+                  <span>+</span>
+                </button>
+              </div>
+
+              <!-- Quick Links (WhatsApp Direct & Quick View) -->
+              <div class="quick-links-row">
+                <span class="link-action" onclick="alert('In Step 8, this opens the full Nutrition, Sourcing & Storage Details Modal for ${p.name}!')">
+                  🔍 View Details
+                </span>
+                <a href="https://wa.me/2347040275628?text=Hello%20Yolanda%20Foods%2C%20I%20want%20to%20order%20${encodeURIComponent(p.name)}%20(${encodeURIComponent(selectedVariant.label)})" target="_blank" class="link-action link-wa">
+                  💬 Order via WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateVariant(productId, index) {
+      cardStates[productId].variantIndex = parseInt(index);
+      const p = products.find(item => item.id === productId);
+      const v = p.variants[cardStates[productId].variantIndex];
+      document.getElementById(`price-${productId}`).textContent = `₦${v.price.toLocaleString()}`;
+      document.querySelector(`#card-${productId} .link-wa`).href = `https://wa.me/2347040275628?text=${encodeURIComponent(`Hello Yolanda Foods, I want to enquire about ${p.name} (${v.label}).`)}`;
+    }
+
+    function adjustQty(productId, delta) {
+      let q = cardStates[productId].qty + delta;
+      if (q < 1) q = 1;
+      if (q > 50) q = 50;
+      cardStates[productId].qty = q;
+      document.getElementById(`qty-${productId}`).textContent = q;
+    }
+
+    function addToCart(productId) {
+      const p = products.find(item => item.id === productId);
+      const state = cardStates[productId];
+      const variant = p.variants[state.variantIndex];
+
+      // Check if already in cart
+      const existing = cart.find(c => c.id === p.id && c.variantLabel === variant.label);
+      if (existing) {
+        existing.qty += state.qty;
+      } else {
+        cart.push({
+          id: p.id,
+          name: p.name,
+          variantLabel: variant.label,
+          price: variant.price,
+          qty: state.qty,
+          icon: p.icon
+        });
+      }
+
+      updateCartUI();
+      showCartToast();
+
+      // Button feedback animation
+      const card = document.getElementById(`card-${productId}`);
+      const btn = card.querySelector('.btn-add-cart');
+      const origText = btn.innerHTML;
+      btn.innerHTML = `<span>✓ Added</span>`;
+      btn.style.background = '#208746';
+      setTimeout(() => {
+        btn.innerHTML = origText;
+        btn.style.background = '';
+      }, 1000);
+    }
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      document.getElementById('cartCountBadge').textContent = `${totalItems} ${totalItems === 1 ? 'item' : 'items'}`;
+      document.getElementById('cartSubtotalText').textContent = money(subtotal);
+      const fa = document.getElementById('floatCartAmount');
+      if (fa) fa.textContent = money(subtotal);
+      document.getElementById('floatingCart').classList.toggle('has-items', totalItems > 0);
+      document.getElementById('floatingCount').textContent = totalItems > 99 ? '99+' : totalItems;
+      document.getElementById('floatingCart').setAttribute('aria-label', `View basket, ${totalItems} ${totalItems === 1 ? 'item' : 'items'}`);
+      saveCart();
+      renderCart();
+    }
+
+    function showCartToast() {
+      const toast = document.getElementById('cartToast');
+      toast.classList.add('show');
+      clearTimeout(showCartToast.timer);
+      showCartToast.timer = setTimeout(() => toast.classList.remove('show'), 1700);
+    }
+
+    function renderCart() {
+      const lines = document.getElementById('cartLines');
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      document.getElementById('summaryItems').textContent = totalItems;
+      document.getElementById('summaryTotal').textContent = money(subtotal);
+      const link = document.getElementById('sendEnquiry');
+      if (!cart.length) {
+        lines.innerHTML = `<div class="empty-cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.3 10.2a2 2 0 0 0 2 1.6h9.1a2 2 0 0 0 2-1.6L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="19" cy="20" r="1"/></svg><h2>Your basket is empty</h2><p>Explore the farm shop and add something fresh.</p><button class="shop-again" type="button" onclick="goToShop()">Browse farm products</button></div>`;
+        link.classList.add('disabled'); link.setAttribute('aria-disabled','true'); link.href = '#';
+        return;
+      }
+      lines.innerHTML = cart.map((item, i) => `
+        <article class="cart-line"><div class="cart-line-icon" aria-hidden="true">${item.icon}</div><div class="cart-line-main">
+          <h3>${item.name}</h3><p>${item.variantLabel} · ${money(item.price)} each</p>
+          <div class="cart-line-bottom"><strong>${money(item.price * item.qty)}</strong>
+          <div class="qty-stepper" aria-label="Quantity for ${item.name}"><button class="qty-btn" type="button" onclick="changeCartQty(${i},-1)" aria-label="Decrease ${item.name} quantity">−</button><span class="qty-val">${item.qty}</span><button class="qty-btn" type="button" onclick="changeCartQty(${i},1)" aria-label="Increase ${item.name} quantity">+</button></div>
+          <button class="remove-line" type="button" onclick="removeCartLine(${i})">Remove</button></div>
+        </div></article>`).join('');
+      const message = `Hello Yolanda Foods, I would like to enquire about these items:
+
+${cart.map(c => `• ${c.name} — ${c.variantLabel} × ${c.qty} = ${money(c.price * c.qty)}`).join('\n')}
+
+Estimated subtotal: ${money(subtotal)}. Please confirm availability, final prices and delivery within Lagos.`;
+      link.href = 'https://wa.me/2347040275628?text=' + encodeURIComponent(message);
+      link.classList.remove('disabled'); link.removeAttribute('aria-disabled');
+    }
+
+    function changeCartQty(i, delta) {
+      if (!cart[i]) return;
+      cart[i].qty = Math.max(1, Math.min(50, cart[i].qty + delta));
+      updateCartUI();
+    }
+    function removeCartLine(i) { cart.splice(i, 1); updateCartUI(); }
+    function syncRoute() {
+      const inCart = location.hash === '#cart';
+      document.getElementById('shopView').hidden = inCart;
+      document.getElementById('cartView').hidden = !inCart;
+      document.getElementById('floatingCart').hidden = inCart;
+      window.scrollTo(0,0);
+    }
+    function goToCart() { location.hash = 'cart'; syncRoute(); }
+    function goToShop() { history.pushState(null, '', location.pathname + location.search); syncRoute(); }
+    window.addEventListener('hashchange', syncRoute);
+    window.addEventListener('popstate', syncRoute);
+
+    // Initialize
+    initCardStates();
+    renderCards();
+    updateCartUI();
+    syncRoute();
+  </script>
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 6: Farm Market Catalog & Category Tabs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Karla:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --linen: #F6F0E1;
+      --paper: #FFFDF6;
+      --ink: #32301F;
+      --ink-soft: #6E6A52;
+      --green-deep: #1E5631;
+      --green: #2F7D4C;
+      --gold: #E8A33D;
+      --gold-deep: #A9762A;
+      --terra: #C4562B;
+      --kraft: #EFE5CB;
+      --line: #E2D8BC;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'Karla', 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--linen);
+      color: var(--ink);
+      font-family: var(--font-body);
+      padding-bottom: 80px;
+      position: relative;
+    }
+
+    /* Subtle linen/paper grain texture over the whole page */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2000;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+    }
+
+    /* ============ VETTING BAR (chalkboard style) ============ */
+    .vetting-bar {
+      background: #17321F;
+      color: #EFE7CE;
+      padding: 10px 24px;
+      font-size: 12.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .vetting-tag {
+      background: var(--gold);
+      color: #3A2C08;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+    }
+
+    /* ============ PAGE WRAP ============ */
+    .catalog-section {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ============ FARM MARKET HEADER ============ */
+    .market-top-strip {
+      margin: 28px 0 26px;
+      background: var(--kraft);
+      border: 1.5px dashed #C9B684;
+      border-radius: 10px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #6B5B2E;
+      letter-spacing: 0.02em;
+    }
+
+    .market-top-strip span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .market-top-strip svg { color: var(--green-deep); flex: none; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 600;
+      color: var(--green-deep);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--gold-deep);
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin-top: 8px;
+      max-width: 480px;
+      line-height: 1.55;
+    }
+
+    /* Wooden crate-style item tag */
+    .item-counter {
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #5F4E22;
+      background: var(--kraft);
+      padding: 8px 16px 8px 24px;
+      border-radius: 8px;
+      border: 1.5px solid #D5C494;
+      position: relative;
+      transform: rotate(1deg);
+      box-shadow: 0 2px 6px rgba(90, 70, 30, 0.12);
+      white-space: nowrap;
+    }
+
+    .item-counter::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #C7B27C;
+      box-shadow: inset 0 1px 2px rgba(60, 45, 15, 0.5);
+    }
+
+    /* ============ WHEAT DIVIDER ============ */
+    .wheat-divider {
+      display: flex;
+      justify-content: center;
+      margin: 6px 0 22px;
+    }
+
+    /* ============ CATEGORY TABS (market sign style) ============ */
+    .filter-tabs-wrapper {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 9px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      box-shadow: 0 3px 12px rgba(90, 70, 30, 0.05);
+      margin-bottom: 22px;
+    }
+
+    .filter-tabs-wrapper::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: #F5EEDC;
+      border: 1.5px solid #E0D4B2;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: #5F573B;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn svg { flex: none; }
+
+    .tab-btn:hover {
+      border-color: var(--green);
+      color: var(--green-deep);
+      background: #EDF2E4;
+    }
+
+    .tab-btn.active {
+      background: var(--green-deep);
+      border-color: var(--green-deep);
+      color: #F6EED9;
+      box-shadow: 0 4px 12px rgba(30, 86, 49, 0.3);
+    }
+
+    .tab-count {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(95, 87, 59, 0.12);
+      color: inherit;
+    }
+
+    .tab-btn.active .tab-count {
+      background: var(--gold);
+      color: #3A2C08;
+    }
+
+    /* ============ SORT BAR ============ */
+    .sort-control-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1.5px dashed #D5C494;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .active-filter-label {
+      font-size: 13.5px;
+      color: var(--ink-soft);
+    }
+
+    .active-filter-label strong {
+      font-family: var(--font-display);
+      font-size: 15px;
+      color: var(--green-deep);
+      font-weight: 600;
+    }
+
+    .sort-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sort-select-wrap label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sort-select {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sort-select:focus { border-color: var(--green); }
+
+    /* ============ PRODUCT CARDS (farm paper style) ============ */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
+      gap: 22px;
+    }
+
+    .preview-card {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 18px;
+      padding: 22px 20px 20px;
+      box-shadow: 0 4px 14px rgba(90, 70, 30, 0.05);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .preview-card:hover {
+      border-color: #C9B684;
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(90, 70, 30, 0.12);
+    }
+
+    .art-basket {
+      width: 134px;
+      height: 134px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #F5EDD8 0%, #EBDFC0 70%, #E4D5AE 100%);
+      border: 1.5px dashed #D3C294;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      transition: transform 0.25s ease;
+    }
+
+    .preview-card:hover .art-basket { transform: scale(1.04) rotate(-1deg); }
+
+    .art-basket svg { width: 104px; height: 104px; }
+
+    .card-badge-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cat-pill {
+      font-size: 10px;
+      font-weight: 800;
+      color: #6B5B2E;
+      background: var(--kraft);
+      padding: 4px 10px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      border: 1px solid #DCCDA3;
+    }
+
+    .origin-pill {
+      font-size: 10px;
+      font-weight: 800;
+      color: #98481F;
+      background: #F8E4D6;
+      padding: 4px 10px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      border: 1px solid #EFCDB4;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 19.5px;
+      font-weight: 600;
+      color: var(--green-deep);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-size: 12.8px;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+      flex: 1;
+      line-height: 1.55;
+      max-width: 230px;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding-top: 14px;
+      border-top: 1.5px dashed #E4D9BB;
+      gap: 10px;
+    }
+
+    /* Market chalk price board */
+    .price-text {
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #F3EAD2;
+      background: var(--green-deep);
+      padding: 7px 12px;
+      border-radius: 7px;
+      transform: rotate(-1.5deg);
+      box-shadow: 0 2px 6px rgba(30, 60, 35, 0.25);
+      white-space: nowrap;
+    }
+
+    .btn-preview-add {
+      background: var(--terra);
+      color: #FFF6EC;
+      border: none;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 8px rgba(196, 86, 43, 0.25);
+    }
+
+    .btn-preview-add:hover {
+      background: #A94422;
+      transform: translateY(-1px);
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 52px;
+      background: var(--paper);
+      border-radius: 16px;
+      color: var(--ink-soft);
+      border: 1.5px dashed #D5C494;
+      font-family: var(--font-display);
+    }
+
+    /* ============ FARM PROMISE STRIP ============ */
+    .promise-strip {
+      margin-top: 36px;
+      background: var(--green-deep);
+      border-radius: 16px;
+      padding: 26px 30px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      color: #EFE7CE;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promise-strip::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 1.5px dashed rgba(232, 163, 61, 0.4);
+      border-radius: 11px;
+      pointer-events: none;
+    }
+
+    .promise-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 10px;
+    }
+
+    .promise-icon {
+      width: 44px;
+      height: 44px;
+      flex: none;
+      border-radius: 50%;
+      background: rgba(232, 163, 61, 0.16);
+      border: 1.5px solid rgba(232, 163, 61, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+    }
+
+    .promise-title {
+      font-family: var(--font-display);
+      font-size: 15.5px;
+      font-weight: 600;
+      color: #F7EFDA;
+      margin-bottom: 2px;
+    }
+
+    .promise-sub {
+      font-size: 11.5px;
+      color: rgba(239, 231, 206, 0.75);
+      line-height: 1.4;
+    }
+
+    .vet-footer-note {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+
+    .vet-footer-note strong { color: var(--green-deep); }
+
+    @media (max-width: 860px) {
+      .promise-strip { grid-template-columns: 1fr; }
+      .section-title { font-size: 30px; }
+      .market-top-strip { gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span class="vetting-tag">Step 6 of 15 — Vetting</span>
+      <span><strong>Farm Market Catalog:</strong> Category Tabs, Sorting & Product Cards — restyled to match your brand warmth</span>
+    </div>
+    <div style="color:#D8C79A;font-size:11.5px;">WhatsApp test line: 07040275628</div>
+  </div>
+
+  <section class="catalog-section">
+
+    <!-- Farm market freshness strip -->
+    <div class="market-top-strip">
+      <span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        Harvested fresh this week
+      </span>
+      <span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        Sorted &amp; sealed by hand
+      </span>
+      <span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="10" rx="1"/><path d="M14 9h4l3.5 3.5V16H14z"/><circle cx="6" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg>
+        Delivered across Lagos
+      </span>
+    </div>
+
+    <!-- Header -->
+    <div class="section-header">
+      <div>
+        <div class="eyebrow">Yolanda Farm Market • Lagos</div>
+        <h2 class="section-title">The Farm Catalog, <em>sorted your way</em></h2>
+        <p class="section-subtitle">Pure honey, palm oil, pap, potatoes, onions and limes — picked from the farm, packed clean, and brought straight to your kitchen.</p>
+      </div>
+      <div class="item-counter" id="itemCounter">Showing all 10 farm items</div>
+    </div>
+
+    <!-- Wheat sprig divider -->
+    <div class="wheat-divider">
+      <svg width="230" height="26" viewBox="0 0 230 26" fill="none" aria-hidden="true">
+        <defs>
+          <g id="sprig">
+            <path d="M124 13c8-1 15-2 21-5-6-2-11-2-16 0-4 1-5 3-5 5z" fill="#C0A468"/>
+            <ellipse cx="152" cy="8" rx="6.5" ry="3" transform="rotate(-16 152 8)" fill="#C0A468"/>
+            <ellipse cx="165" cy="5.5" rx="6.5" ry="3" transform="rotate(-18 165 5.5)" fill="#C0A468"/>
+            <ellipse cx="178" cy="3.5" rx="6.5" ry="3" transform="rotate(-20 178 3.5)" fill="#C0A468"/>
+            <path d="M124 13c8 1 15 2 21 5-6 2-11 2-16 0-4-1-5-3-5-5z" fill="#C0A468"/>
+            <ellipse cx="152" cy="18" rx="6.5" ry="3" transform="rotate(16 152 18)" fill="#C0A468"/>
+            <ellipse cx="165" cy="20.5" rx="6.5" ry="3" transform="rotate(18 165 20.5)" fill="#C0A468"/>
+            <ellipse cx="178" cy="22.5" rx="6.5" ry="3" transform="rotate(20 178 22.5)" fill="#C0A468"/>
+            <path d="M116 13h10" stroke="#C0A468" stroke-width="1.6" stroke-linecap="round"/>
+          </g>
+        </defs>
+        <use href="#sprig"/>
+        <use href="#sprig" transform="translate(230 0) scale(-1 1)"/>
+        <path d="M115 6l4.5 7-4.5 7-4.5-7z" fill="#C4562B"/>
+      </svg>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="filter-tabs-wrapper" id="tabsWrapper">
+      <button class="tab-btn active" onclick="setCategory('all', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        <span>All Harvest</span>
+        <span class="tab-count">10</span>
+      </button>
+
+      <button class="tab-btn" onclick="setCategory('honey-oils', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7l5.7 5.7a8 8 0 1 1-11.4 0z"/></svg>
+        <span>Honey &amp; Palm Oil</span>
+        <span class="tab-count">2</span>
+      </button>
+
+      <button class="tab-btn" onclick="setCategory('pap', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18c0 5.5-4 9.5-9 9.5S3 16.5 3 11z"/><path d="M8 7c-.8-1.3.8-2 0-3.3M12 6.5c-.8-1.3.8-2 0-3.3M16 7c-.8-1.3.8-2 0-3.3"/></svg>
+        <span>Yolanda Pap (Ogi)</span>
+        <span class="tab-count">3</span>
+      </button>
+
+      <button class="tab-btn" onclick="setCategory('tubers', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="13.5" rx="8.5" ry="6.5"/><circle cx="9" cy="12.5" r="0.6" fill="currentColor"/><circle cx="14" cy="15" r="0.6" fill="currentColor"/><circle cx="15" cy="11" r="0.6" fill="currentColor"/><path d="M13 7c0-2 1.5-3.5 3.5-4-.3 2.2-1.3 3.6-3.5 4z"/></svg>
+        <span>Potatoes &amp; Tubers</span>
+        <span class="tab-count">2</span>
+      </button>
+
+      <button class="tab-btn" onclick="setCategory('produce', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Onions &amp; Fresh Produce</span>
+        <span class="tab-count">2</span>
+      </button>
+
+      <button class="tab-btn" onclick="setCategory('snacks', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.3 0 5.5 2.5 5.5 5.5 0 2-1 3.2-1 4.7 0 1.6 1.2 2.7 1.2 4.6C17.7 20.6 15.2 22 12 22s-5.7-1.4-5.7-4.2c0-1.9 1.2-3 1.2-4.6 0-1.5-1-2.7-1-4.7C6.5 5.5 8.7 3 12 3z"/><path d="M7.2 13.2c3 1.2 6.6 1.2 9.6 0"/></svg>
+        <span>Groundnut Snacks</span>
+        <span class="tab-count">1</span>
+      </button>
+    </div>
+
+    <!-- Sort Bar -->
+    <div class="sort-control-bar">
+      <div class="active-filter-label">
+        Now viewing: <strong id="activeCategoryLabel">All Harvest</strong>
+      </div>
+      <div class="sort-select-wrap">
+        <label for="sortSelect">Sort by</label>
+        <select id="sortSelect" class="sort-select" onchange="handleSort(this.value)">
+          <option value="featured">Featured freshness</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Alphabetical (A – Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="preview-grid" id="productGrid"><!-- rendered by JS --></div>
+
+    <!-- Farm Promise Strip -->
+    <div class="promise-strip">
+      <div class="promise-item">
+        <div class="promise-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        </div>
+        <div>
+          <div class="promise-title">Farm to Kitchen</div>
+          <div class="promise-sub">No long warehouse storage. Harvested, then delivered.</div>
+        </div>
+      </div>
+      <div class="promise-item">
+        <div class="promise-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div>
+          <div class="promise-title">Pure &amp; Original</div>
+          <div class="promise-sub">Zero adulteration, zero preservatives — just honest foodstuff.</div>
+        </div>
+      </div>
+      <div class="promise-item">
+        <div class="promise-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="10" rx="1"/><path d="M14 9h4l3.5 3.5V16H14z"/><circle cx="6" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg>
+        </div>
+        <div>
+          <div class="promise-title">Lagos Doorstep Delivery</div>
+          <div class="promise-sub">Order on WhatsApp: 07040275628 — we handle the rest.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="vet-footer-note">Step 6 vetting build • All prices in ₦ Naira • Test WhatsApp line <strong>07040275628</strong> (client line stays untouched until launch)</p>
+  </section>
+
+  <script>
+    /* ============================================================
+       HAND-DRAWN STYLE FARM PRODUCE ILLUSTRATIONS (inline SVG)
+       ============================================================ */
+    const art = {
+      honey: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="60" cy="104" rx="33" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <rect x="46" y="19" width="28" height="10" rx="3" fill="#7A4A1E"/>
+        <rect x="42" y="27" width="36" height="9" rx="3" fill="#96601F"/>
+        <path d="M44 36h32c7 0 12 5 12 12v35c0 11-9 19-20 19H52c-11 0-20-8-20-19V48c0-7 5-12 12-12z" fill="#E8A33D"/>
+        <path d="M44 36h9c-3 3-5 7-5 12v35c0 9 5 15 12 18-11 1-20-7-20-18V48c0-7 5-12 12-12h-8z" fill="#F2BC63" opacity=".85"/>
+        <rect x="47" y="56" width="26" height="26" rx="5" fill="#FCF5E2"/>
+        <path d="M60 60.5l7.5 4.3v8.7L60 77.8l-7.5-4.3v-8.7z" fill="#B57A22"/>
+        <path d="M60 64.2l4 2.3v4.6l-4 2.3-4-2.3v-4.6z" fill="#FCF5E2"/>
+      </svg>`,
+
+      palmOil: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="57" cy="104" rx="31" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <path d="M92 15c6 7 8 16 6 24-2 7-7 12-14 15 0-14 1-27 8-39z" fill="#2F7D4C"/>
+        <path d="M92 15c-3 8-4 16-3 24 3-6 7-10 13-12-3-5-6-9-10-12z" fill="#46995F" opacity=".8"/>
+        <rect x="50" y="12" width="14" height="9" rx="2.5" fill="#5E3A1F"/>
+        <rect x="52" y="21" width="10" height="12" fill="#A83E20"/>
+        <path d="M52 33h10c9 5 15 13 15 23v28c0 10-7 17-17 17H54c-10 0-17-7-17-17V56c0-10 6-18 15-23z" fill="#C24B27"/>
+        <rect x="42" y="54" width="7" height="32" rx="3.5" fill="#E4713F" opacity=".7"/>
+        <rect x="45" y="62" width="24" height="22" rx="4.5" fill="#FBEFD8"/>
+        <path d="M57 66.5l6.5 3.7v7.6L57 81.5l-6.5-3.7v-7.6z" fill="#C24B27"/>
+      </svg>`,
+
+      papBowl: (top, deep, swirl) => `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="58" cy="103" rx="34" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <g transform="rotate(26 90 42)">
+          <rect x="87" y="26" width="6" height="34" rx="3" fill="#A9763F"/>
+          <ellipse cx="90" cy="24" rx="8.5" ry="10.5" fill="#BE8A50"/>
+        </g>
+        <path d="M22 62h72c0 21-16 36-36 36S22 83 22 62z" fill="#F5F0E1"/>
+        <path d="M22 62h72c0 5-1 9-3 13H25c-2-4-3-8-3-13z" fill="#E7DFC9"/>
+        <ellipse cx="58" cy="62" rx="36" ry="9" fill="${deep}"/>
+        <ellipse cx="58" cy="60.5" rx="36" ry="9" fill="${top}"/>
+        <path d="M46 59c5-3.5 14-3.5 19 1" stroke="${swirl}" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M52 65.5c4-2.5 10-2.5 14 .5" stroke="${deep}" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+        <rect x="47" y="96" width="22" height="6" rx="3" fill="#E7DFC9"/>
+        <path d="M44 44c-2-4 2-6 0-10M58 40c-2-4 2-6 0-10M72 44c-2-4 2-6 0-10" stroke="#D9CDB0" stroke-width="2.6" stroke-linecap="round"/>
+      </svg>`,
+
+      sweetPotato: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="58" cy="101" rx="36" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <path d="M24 66c-4-18 8-34 27-38 20-4 40 4 45 22 5 18-7 33-27 37-20 4-41-3-45-21z" fill="#A65E33"/>
+        <path d="M27 55c4-12 15-20 28-23-10 6-17 14-20 25-3 12 1 22 9 29-14-4-21-16-17-31z" fill="#8A4A26" opacity=".45"/>
+        <path d="M56 42c14-2 27 3 33 13" stroke="#C97E4A" stroke-width="3" stroke-linecap="round" opacity=".65"/>
+        <g fill="#7A4020" opacity=".55">
+          <ellipse cx="47" cy="70" rx="2.6" ry="1.8" transform="rotate(-12 47 70)"/>
+          <ellipse cx="64" cy="60" rx="2.6" ry="1.8" transform="rotate(-12 64 60)"/>
+          <ellipse cx="74" cy="74" rx="2.6" ry="1.8" transform="rotate(-12 74 74)"/>
+          <ellipse cx="55" cy="82" rx="2.6" ry="1.8" transform="rotate(-12 55 82)"/>
+        </g>
+        <path d="M92 50c4-2 8-2 12 0-4 1-8 4-10 7-1-3-1-5-2-7z" fill="#4E8C3F"/>
+      </svg>`,
+
+      irishPotato: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="58" cy="101" rx="36" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <path d="M22 62c0-17 15-30 35-30 21 0 38 12 38 29 0 18-16 30-37 30-20 0-36-11-36-29z" fill="#D9B36C"/>
+        <path d="M30 48c6-9 16-14 27-14-8 4-15 10-19 18-5 10-4 20 2 27-12-4-18-17-10-31z" fill="#C29B55" opacity=".6"/>
+        <g fill="#A8813F">
+          <ellipse cx="52" cy="56" rx="2.4" ry="1.7" transform="rotate(-15 52 56)"/>
+          <ellipse cx="70" cy="48" rx="2.4" ry="1.7" transform="rotate(-15 70 48)"/>
+          <ellipse cx="80" cy="66" rx="2.4" ry="1.7" transform="rotate(-15 80 66)"/>
+          <ellipse cx="60" cy="76" rx="2.4" ry="1.7" transform="rotate(-15 60 76)"/>
+          <ellipse cx="42" cy="68" rx="2.4" ry="1.7" transform="rotate(-15 42 68)"/>
+        </g>
+        <path d="M66 33c2-6 7-9 13-9-4 5-5 9-4 14-4-1-7-3-9-5z" fill="#4E8C3F"/>
+      </svg>`,
+
+      onion: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="60" cy="102" rx="31" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <path d="M60 26c19 0 34 15 34 34s-15 34-34 34-34-15-34-34 15-34 34-34z" fill="#C08A45"/>
+        <path d="M60 26c-11 6-18 19-18 34s7 28 18 34c-19 0-34-15-34-34s15-34 34-34z" fill="#A06E32" opacity=".55"/>
+        <path d="M60 28v66M45 33c-7 12-7 44 0 56M75 33c7 12 7 44 0 56" stroke="#F3E3C3" stroke-width="2" opacity=".45"/>
+        <path d="M60 26c-3-7-2-13 2-18 1 7 4 11 8 14-4 2-7 3-10 4z" fill="#4E8C3F"/>
+        <path d="M52 92l-3 8M60 94v8M68 92l3 8" stroke="#8A6A4A" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>`,
+
+      lime: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="58" cy="102" rx="34" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <path d="M48 26c3-9 11-13 20-12-3 9-11 15-20 12z" fill="#2F7D4C"/>
+        <circle cx="47" cy="60" r="27" fill="#4E9A3A"/>
+        <path d="M34 48a16 16 0 0 1 13-9" stroke="#8CC76B" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="80" cy="74" r="23" fill="#7FB239"/>
+        <circle cx="80" cy="74" r="18.5" fill="#EFF5C6"/>
+        <g stroke="#B7D65F" stroke-width="2.4" stroke-linecap="round">
+          <path d="M80 58.5v31M64.5 74h31M69 63l22 22M91 63l-22 22"/>
+        </g>
+        <circle cx="80" cy="74" r="3.6" fill="#DCE98F"/>
+      </svg>`,
+
+      groundnut: `<svg viewBox="0 0 120 120" fill="none">
+        <ellipse cx="58" cy="102" rx="34" ry="5" fill="#DCCFAE" opacity=".55"/>
+        <g transform="rotate(-22 44 54)">
+          <path d="M44 22c10 0 17 8 17 17 0 7-3 11-3 16 0 5 4 9 4 16 0 11-8 19-18 19s-18-8-18-19c0-7 4-11 4-16 0-5-3-9-3-16 0-9 7-17 17-17z" fill="#D2A568"/>
+          <path d="M27 55c9 4 25 4 34 0" stroke="#B98A4E" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+          <g fill="#B98A4E" opacity=".55">
+            <circle cx="38" cy="36" r="1.7"/><circle cx="50" cy="42" r="1.7"/><circle cx="42" cy="48" r="1.7"/>
+            <circle cx="52" cy="31" r="1.7"/><circle cx="34" cy="45" r="1.7"/>
+            <circle cx="40" cy="72" r="1.7"/><circle cx="50" cy="78" r="1.7"/><circle cx="46" cy="88" r="1.7"/>
+            <circle cx="55" cy="68" r="1.7"/><circle cx="36" cy="82" r="1.7"/>
+          </g>
+        </g>
+        <circle cx="84" cy="82" r="11" fill="#B5793C"/>
+        <path d="M84 71v22M73 82h22" stroke="#96602C" stroke-width="2" opacity=".7"/>
+        <circle cx="93" cy="58" r="8" fill="#C68B4A"/>
+        <path d="M93 50v16M85 58h16" stroke="#96602C" stroke-width="1.8" opacity=".6"/>
+      </svg>`
+    };
+
+    /* ============================================================
+       CATALOG DATA
+       ============================================================ */
+    const catalog = [
+      { id: 1, name: "Pure Honey", category: "honey-oils", categoryName: "Honey & Oils", priceMin: 4500, priceDisplay: "From ₦4,500", desc: "100% unadulterated, unfiltered natural honey — straight from the comb to your jar.", badge: "Raw & Unfiltered", art: art.honey },
+      { id: 2, name: "Palm Oil", category: "honey-oils", categoryName: "Honey & Oils", priceMin: 3200, priceDisplay: "From ₦3,200", desc: "Traditional cold-pressed palm oil. Thick, deep red, and free of dye or dilution.", badge: "Cold-Pressed", art: art.palmOil },
+      { id: 3, name: "Sweet Yellow Corn Pap", category: "pap", categoryName: "Yolanda Pap", priceMin: 2200, priceDisplay: "From ₦2,200", desc: "Naturally sweet with a smooth, velvety texture. Rich in clean energy and Vitamins A, B & E.", badge: "Energizing", art: art.papBowl("#F7C948", "#E5A32A", "#FBE08A") },
+      { id: 4, name: "Brown Guinea Corn Pap (Ogi Baba)", category: "pap", categoryName: "Yolanda Pap", priceMin: 2500, priceDisplay: "From ₦2,500", desc: "The traditional superfood classic. High in fibre and iron, gentle on blood sugar.", badge: "High-Fibre", art: art.papBowl("#A9744F", "#8A5A3B", "#C99B72") },
+      { id: 5, name: "Pure White Corn Pap", category: "pap", categoryName: "Yolanda Pap", priceMin: 2000, priceDisplay: "From ₦2,000", desc: "Mild, soothing and ultra-smooth. A calcium-rich breakfast the whole family enjoys.", badge: "Wholesome", art: art.papBowl("#F3EFE2", "#E0D9C2", "#FFFFFF") },
+      { id: 6, name: "Farm-Fresh Sweet Potatoes", category: "tubers", categoryName: "Tubers & Roots", priceMin: 4200, priceDisplay: "From ₦4,200", desc: "Naturally sweet orange tubers dug from loamy soil. Firm flesh, no spongy cores.", badge: "Sun-Ripened", art: art.sweetPotato },
+      { id: 7, name: "Premium Irish Potatoes", category: "tubers", categoryName: "Tubers & Roots", priceMin: 5500, priceDisplay: "From ₦5,500", desc: "Highland-grown with thin golden skins and firm, starchy flesh. Fries, boils and mashes clean.", badge: "Highland Grown", art: art.irishPotato },
+      { id: 8, name: "Fresh Dry-Skin Onions", category: "produce", categoryName: "Onions & Produce", priceMin: 3800, priceDisplay: "From ₦3,800", desc: "Properly cured dry skins that store longer. Sharp aroma, full flavour, zero early rot.", badge: "Cured & Pungent", art: art.onion },
+      { id: 9, name: "Fresh Juicy Limes", category: "produce", categoryName: "Citrus & Produce", priceMin: 1500, priceDisplay: "From ₦1,500", desc: "Hand-picked citrus bursting with juice and Vitamin C — for cooking, drinks and detox.", badge: "High Juice", art: art.lime },
+      { id: 10, name: "Roasted Golden Groundnuts", category: "snacks", categoryName: "Groundnut Snacks", priceMin: 2000, priceDisplay: "From ₦2,000", desc: "Crunchy, lightly salted and hand-sorted. The classic pairing for a warm bowl of pap.", badge: "Hand-Sorted", art: art.groundnut }
+    ];
+
+    let currentCategory = 'all';
+    let currentSort = 'featured';
+
+    function renderCatalog() {
+      const grid = document.getElementById('productGrid');
+      const counter = document.getElementById('itemCounter');
+
+      let filtered = currentCategory === 'all'
+        ? [...catalog]
+        : catalog.filter(item => item.category === currentCategory);
+
+      if (currentSort === 'price-asc') filtered.sort((a, b) => a.priceMin - b.priceMin);
+      else if (currentSort === 'price-desc') filtered.sort((a, b) => b.priceMin - a.priceMin);
+      else if (currentSort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+      counter.textContent = `Showing ${filtered.length} of ${catalog.length} farm items`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="no-results"><h3>Nothing in this basket right now</h3><p style="margin-top:8px;font-family:var(--font-body);">Chat with us on WhatsApp — 07040275628 — for custom or bulk requests.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="preview-card">
+          <div class="art-basket">${item.art}</div>
+          <div class="card-badge-row">
+            <span class="cat-pill">${item.categoryName}</span>
+            <span class="origin-pill">${item.badge}</span>
+          </div>
+          <div class="card-title">${item.name}</div>
+          <div class="card-desc">${item.desc}</div>
+          <div class="card-footer">
+            <span class="price-text">${item.priceDisplay}</span>
+            <button class="btn-preview-add" onclick="alert('In Step 7, this opens the size picker and adds ${item.name} to your basket.')">Select Size</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const labels = {
+        'all': 'All Harvest',
+        'honey-oils': 'Honey & Palm Oil',
+        'pap': 'Yolanda Pap (Ogi)',
+        'tubers': 'Potatoes & Tubers',
+        'produce': 'Onions & Fresh Produce',
+        'snacks': 'Groundnut Snacks'
+      };
+      document.getElementById('activeCategoryLabel').textContent = labels[cat] || 'Selected';
+      renderCatalog();
+    }
+
+    function handleSort(sortVal) {
+      currentSort = sortVal;
+      renderCatalog();
+    }
+
+    renderCatalog();
+  </script>
+</body>
+</html>

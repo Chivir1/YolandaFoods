@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 10: Multi-Channel Checkout Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --accent-red: #D93838;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-friendly: 'Fredoka', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding-bottom: 120px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .checkout-page-wrap {
+      max-width: 1140px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .page-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    /* Checkout Layout Grid */
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+    }
+
+    .checkout-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DE;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 4px 18px rgba(18, 78, 40, 0.04);
+      margin-bottom: 24px;
+    }
+
+    .card-heading {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-num {
+      width: 26px;
+      height: 26px;
+      background: #E8F7EC;
+      color: var(--primary);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* Form Fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 580px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .form-input, .form-select {
+      background: #F9FAF8;
+      border: 1.5px solid #CCDCD0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13.5px;
+      font-family: var(--font-sans);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(18, 78, 40, 0.1);
+    }
+
+    /* Payment Method Toggle Tabs */
+    .payment-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .payment-option-card {
+      border: 2px solid #D5E2D8;
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #FBFDFB;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .payment-option-card.selected {
+      border-color: var(--primary);
+      background: #EAF8EE;
+      box-shadow: 0 4px 12px rgba(18, 78, 40, 0.1);
+    }
+
+    .radio-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #A2B8AA;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .payment-option-card.selected .radio-circle {
+      border-color: var(--primary);
+    }
+
+    .payment-option-card.selected .radio-circle::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .p-opt-title {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--primary-dark);
+      margin-bottom: 2px;
+    }
+
+    .p-opt-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Bank Account Box for Bank Transfer Option */
+    .bank-details-box {
+      background: #FFFDF8;
+      border: 1.5px dashed #E5C368;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .bank-details-box.visible {
+      display: block;
+    }
+
+    /* Order Summary Column */
+    .summary-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DE;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(18, 78, 40, 0.05);
+      position: sticky;
+      top: 60px;
+    }
+
+    .item-mini-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #EEF3EF;
+      font-size: 13px;
+    }
+
+    .line-breakdown {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .total-summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      padding-top: 14px;
+      border-top: 2px dashed #CCDCD0;
+      margin-top: 12px;
+      margin-bottom: 24px;
+    }
+
+    .total-grand {
+      color: var(--primary);
+      font-family: var(--font-friendly);
+      font-size: 22px;
+    }
+
+    /* Primary Dispatch Buttons */
+    .btn-submit-wa {
+      width: 100%;
+      background: #25D366;
+      color: #FFFFFF;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28);
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .btn-submit-wa:hover {
+      background: #1EBE5B;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit-site {
+      width: 100%;
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-submit-site:hover {
+      background: var(--primary-light);
+    }
+
+    /* Success Modal confirmation */
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 33, 19, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .success-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .success-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 540px;
+      width: 100%;
+      padding: 36px 30px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .success-icon {
+      font-size: 54px;
+      margin-bottom: 12px;
+    }
+
+    .order-id-tag {
+      background: #EAF8EE;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 10 of 15 Vetting</span>
+      <span><strong>Multi-Channel Checkout Flow</strong> (WhatsApp Pre-Filled Payload + On-Site Order Verification)</span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Active WhatsApp Order Line: 07040275628</div>
+  </div>
+
+  <div class="checkout-page-wrap">
+    <h1 class="page-title">Finalize Your Farm Order</h1>
+    <p class="page-sub">Enter your Lagos delivery address and select how you would like to complete your order.</p>
+
+    <div class="checkout-grid">
+      <!-- Left Column: Customer & Payment Details -->
+      <div class="checkout-forms">
+        
+        <!-- Step 1: Customer Contact -->
+        <div class="checkout-card">
+          <div class="card-heading">
+            <span class="step-num">1</span>
+            <span>Customer & Delivery Details</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-input" id="custName" value="Adewale Adeleke" placeholder="e.g. Mrs. Chioma Okafor" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone Number (WhatsApp) *</label>
+              <input type="tel" class="form-input" id="custPhone" value="08021234567" placeholder="e.g. 08021234567" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Lagos Delivery Area *</label>
+              <select class="form-select" id="deliveryArea" onchange="updateDeliveryFee()">
+                <option value="lekki" data-fee="2500">Lekki Phase 1 / Victoria Island (₦2,500)</option>
+                <option value="ikeja" data-fee="2000">Ikeja / Maryland / Opebi (₦2,000)</option>
+                <option value="surulere" data-fee="2000">Surulere / Yaba (₦2,000)</option>
+                <option value="ajah" data-fee="3000">Ajah / Sangotedo (₦3,000)</option>
+                <option value="magodo" data-fee="2500">Magodo / Gbagada / Ogudu (₦2,500)</option>
+                <option value="festac" data-fee="3000">Festac / Amuwo Odofin (₦3,000)</option>
+                <option value="ikorodu" data-fee="3500">Ikorodu Central (₦3,500)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address (Optional)</label>
+              <input type="email" class="form-input" id="custEmail" value="adewale@example.com" placeholder="For receipt copy">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Street Address & Landmark *</label>
+            <input type="text" class="form-input" id="custAddress" value="Block 4, Admiralty Way, Lekki Phase 1" placeholder="e.g. House 12, Close B, Off Admiralty Way" required>
+          </div>
+        </div>
+
+        <!-- Step 2: Payment Method Choice -->
+        <div class="checkout-card">
+          <div class="card-heading">
+            <span class="step-num">2</span>
+            <span>Select Payment Preference</span>
+          </div>
+
+          <div class="payment-options-grid">
+            <!-- WhatsApp Finalize -->
+            <div class="payment-option-card selected" id="opt-wa" onclick="selectPaymentMethod('wa')">
+              <div class="radio-circle"></div>
+              <div>
+                <div class="p-opt-title">💬 WhatsApp Direct Order</div>
+                <div class="p-opt-desc">Auto-formats invoice sent straight to 07040275628 for instant confirmation.</div>
+              </div>
+            </div>
+
+            <!-- Bank Transfer -->
+            <div class="payment-option-card" id="opt-bank" onclick="selectPaymentMethod('bank')">
+              <div class="radio-circle"></div>
+              <div>
+                <div class="p-opt-title">🏦 Bank Transfer</div>
+                <div class="p-opt-desc">Pay directly into Yolanda Foods official bank account and upload receipt.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Details Display Box -->
+          <div class="bank-details-box" id="bankDetailsBox">
+            <div style="font-weight: 800; font-size: 13.5px; color: var(--primary-dark); margin-bottom: 8px;">
+              Official Bank Account Details:
+            </div>
+            <div style="font-size: 13px; line-height: 1.6; color: #435347;">
+              <strong>Bank:</strong> Moniepoint MFB / Zenith Bank<br>
+              <strong>Account Name:</strong> Yolanda Foods Enterprises<br>
+              <strong>Account Number:</strong> <span style="font-family: monospace; font-size: 14px; font-weight: 800; color: #124E28;">0803909518</span><br>
+              <em>Please use your full name as payment reference.</em>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Order Summary & Trigger -->
+      <div class="summary-col">
+        <div class="summary-card">
+          <div style="font-weight: 800; font-size: 18px; color: var(--primary-dark); margin-bottom: 16px;">
+            Order Invoice Summary
+          </div>
+
+          <!-- Mini Item List -->
+          <div id="summaryItemsList">
+            <div class="item-mini-row">
+              <div>
+                <strong>Pure Honey</strong> (1 Litre Bottle)
+                <div style="font-size: 11.5px; color: var(--text-muted);">Qty: 1</div>
+              </div>
+              <div style="font-weight: 800;">₦8,500</div>
+            </div>
+
+            <div class="item-mini-row">
+              <div>
+                <strong>Sweet Yellow Pap</strong> (1kg Tub)
+                <div style="font-size: 11.5px; color: var(--text-muted);">Qty: 1</div>
+              </div>
+              <div style="font-weight: 800;">₦2,200</div>
+            </div>
+
+            <div class="item-mini-row">
+              <div>
+                <strong>Roasted Groundnuts</strong> (400g Jar)
+                <div style="font-size: 11.5px; color: var(--text-muted);">Qty: 1</div>
+              </div>
+              <div style="font-weight: 800;">₦2,000</div>
+            </div>
+          </div>
+
+          <!-- Calculations -->
+          <div style="margin-top: 18px;">
+            <div class="line-breakdown">
+              <span>Items Subtotal:</span>
+              <span id="subtotalDisp" style="font-weight: 700; color: var(--text);">₦12,700</span>
+            </div>
+
+            <div class="line-breakdown">
+              <span>Lagos Delivery:</span>
+              <span id="deliveryFeeDisp" style="font-weight: 700; color: var(--primary);">₦2,500</span>
+            </div>
+
+            <div class="total-summary-line">
+              <span>Total Payable:</span>
+              <span class="total-grand" id="grandTotalDisp">₦15,200</span>
+            </div>
+          </div>
+
+          <!-- Multi-Channel Dispatch Trigger -->
+          <button class="btn-submit-wa" onclick="dispatchWhatsAppOrder()">
+            <span>💬 Send Order via WhatsApp (07040275628)</span>
+          </button>
+
+          <button class="btn-submit-site" onclick="confirmOnSiteOrder()">
+            <span>✓ Confirm Order on Website</span>
+          </button>
+
+          <div style="font-size: 11.5px; color: var(--text-muted); text-align: center; margin-top: 12px;">
+            🔒 Safe order verification • Guaranteed farm-fresh packaging
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ON-SITE ORDER SUCCESS MODAL ================= -->
+  <div class="success-modal" id="successModal">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <span class="order-id-tag" id="orderIdTag">ORDER #YOL-2611-884</span>
+      <h2 style="font-family: var(--font-display); font-size: 26px; color: var(--primary-dark); margin-bottom: 8px;">Order Successfully Placed!</h2>
+      <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;" id="successMsg">
+        Thank you, Adewale! Your order for farm-fresh Yolanda Foods has been logged. Our dispatch desk at <strong>07040275628</strong> has received your invoice and will contact you shortly for doorstep delivery.
+      </p>
+
+      <button class="btn-submit-wa" onclick="openWhatsAppConfirmation()" style="margin-bottom: 8px;">
+        <span>Open WhatsApp Confirmation Chat</span>
+      </button>
+
+      <button class="btn-submit-site" style="background:#F0F4F1; color:var(--text); border:1px solid #D5E2D8;" onclick="closeSuccessModal()">
+        Back to Store
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let subtotal = 12700;
+    let deliveryFee = 2500;
+    let selectedMethod = 'wa';
+
+    function updateDeliveryFee() {
+      const select = document.getElementById('deliveryArea');
+      const fee = parseInt(select.options[select.selectedIndex].getAttribute('data-fee'));
+      deliveryFee = fee;
+
+      document.getElementById('deliveryFeeDisp').textContent = `₦${deliveryFee.toLocaleString()}`;
+      document.getElementById('grandTotalDisp').textContent = `₦${(subtotal + deliveryFee).toLocaleString()}`;
+    }
+
+    function selectPaymentMethod(method) {
+      selectedMethod = method;
+      document.getElementById('opt-wa').classList.toggle('selected', method === 'wa');
+      document.getElementById('opt-bank').classList.toggle('selected', method === 'bank');
+      document.getElementById('bankDetailsBox').classList.toggle('visible', method === 'bank');
+    }
+
+    function dispatchWhatsAppOrder() {
+      const name = document.getElementById('custName').value.trim() || 'Valued Customer';
+      const phone = document.getElementById('custPhone').value.trim() || 'N/A';
+      const address = document.getElementById('custAddress').value.trim() || 'Lagos Address';
+      const area = document.getElementById('deliveryArea').options[document.getElementById('deliveryArea').selectedIndex].text;
+      const total = (subtotal + deliveryFee).toLocaleString();
+
+      const orderId = `YOL-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      let payload = `*NEW ORDER: ${orderId}*%0A`;
+      payload += `*Customer:* ${encodeURIComponent(name)}%0A`;
+      payload += `*Phone:* ${encodeURIComponent(phone)}%0A`;
+      payload += `*Delivery Address:* ${encodeURIComponent(address)}%0A`;
+      payload += `*Lagos Zone:* ${encodeURIComponent(area)}%0A%0A`;
+      payload += `*ORDERED ITEMS:*%0A`;
+      payload += `1. Pure Honey (1 Litre Bottle) x 1 = ₦8,500%0A`;
+      payload += `2. Sweet Yellow Pap (1kg Tub) x 1 = ₦2,200%0A`;
+      payload += `3. Roasted Groundnuts (400g Jar) x 1 = ₦2,000%0A%0A`;
+      payload += `*Items Subtotal:* ₦${subtotal.toLocaleString()}%0A`;
+      payload += `*Lagos Delivery:* ₦${deliveryFee.toLocaleString()}%0A`;
+      payload += `*TOTAL AMOUNT:* ₦${total}%0A`;
+      payload += `*Payment Method:* ${selectedMethod === 'bank' ? 'Bank Transfer' : 'WhatsApp Direct Pay'}%0A%0A`;
+      payload += `Please confirm availability and dispatch timeline. Thank you!`;
+
+      const waURL = `https://wa.me/2347040275628?text=${payload}`;
+      window.open(waURL, '_blank');
+    }
+
+    function confirmOnSiteOrder() {
+      const name = document.getElementById('custName').value.trim() || 'Customer';
+      const orderNum = `YOL-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      document.getElementById('orderIdTag').textContent = `ORDER #${orderNum}`;
+      document.getElementById('successMsg').innerHTML = `
+        Thank you, <strong>${name}</strong>! Your order for farm-fresh Yolanda Foods has been verified. Our Lagos logistics desk at <strong>07040275628</strong> has received your invoice and will process your dispatch right away.
+      `;
+
+      document.getElementById('successModal').classList.add('open');
+    }
+
+    function openWhatsAppConfirmation() {
+      dispatchWhatsAppOrder();
+      closeSuccessModal();
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').classList.remove('open');
+    }
+
+    // Initial calculation
+    updateDeliveryFee();
+  </script>
+</body>
+</html>

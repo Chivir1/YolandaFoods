@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 5: Hero Banner & Search Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #208746;
+      --accent-gold: #D4AF37;
+      --accent-warm: #E29528;
+      --cream-bg: #FAFBF9;
+      --surface-card: #FFFFFF;
+      --text-main: #132218;
+      --text-muted: #5C6E62;
+      --border-subtle: rgba(18, 78, 40, 0.08);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Vetting Header Bar */
+    .vetting-bar {
+      background: #0D2616;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .vetting-tag {
+      background: #1B7A3E;
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========================================================
+       TOP LUXURY NAVIGATION
+       ======================================================== */
+    .nav-luxury {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(18, 78, 40, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-brand-logo {
+      height: 48px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 13.5px;
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-whatsapp-direct {
+      background: #25D366;
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 9px 18px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-whatsapp-direct:hover {
+      background: #1EBE5B;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+    }
+
+    .cart-indicator {
+      background: var(--primary-dark);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .cart-count {
+      background: var(--accent-gold);
+      color: var(--primary-dark);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    /* ========================================================
+       STEP 5: HERO BANNER SECTION
+       ======================================================== */
+    .hero-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 28px 60px;
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      align-items: center;
+      gap: 52px;
+      position: relative;
+    }
+
+    @media (max-width: 960px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        padding: 32px 20px;
+        gap: 36px;
+      }
+      .nav-links { display: none; }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #EAF7EE;
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border: 1px solid rgba(18, 78, 40, 0.15);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: #25D366;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #25D366;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      max-width: 540px;
+    }
+
+    /* ========================================================
+       LIVE INSTANT SEARCH BAR
+       ======================================================== */
+    .search-wrapper {
+      position: relative;
+      max-width: 540px;
+      margin-bottom: 24px;
+    }
+
+    .search-bar-box {
+      background: #FFFFFF;
+      border: 2px solid #D5E4D8;
+      border-radius: 14px;
+      padding: 6px 8px 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 24px rgba(18, 78, 40, 0.06);
+      transition: all 0.25s;
+    }
+
+    .search-bar-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(18, 78, 40, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .search-icon {
+      font-size: 18px;
+      color: var(--primary);
+      opacity: 0.8;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14.5px;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background: transparent;
+    }
+
+    .search-input::placeholder {
+      color: #8C9E92;
+    }
+
+    .btn-search {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-search:hover {
+      background: var(--primary-light);
+    }
+
+    /* Search Dropdown Results Preview */
+    .search-results-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border-radius: 14px;
+      border: 1px solid #D2E4D6;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+      padding: 12px;
+      z-index: 500;
+      display: none;
+    }
+
+    .search-results-panel.open {
+      display: block;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: background 0.15s;
+    }
+
+    .result-item:hover {
+      background: #F4F8F5;
+    }
+
+    .result-title {
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+
+    .result-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .result-price {
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 13.5px;
+    }
+
+    /* Quick Tags Under Search */
+    .quick-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .tag-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #7D9284;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-chip {
+      background: #FFFFFF;
+      border: 1px solid #D7E3DA;
+      color: var(--primary-dark);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag-chip:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* CTA Button Pair */
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 13px 26px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 18px rgba(18, 78, 40, 0.22);
+      transition: all 0.2s;
+    }
+
+    .btn-hero-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-hero-secondary {
+      background: #FFFFFF;
+      color: var(--primary);
+      border: 1.5px solid rgba(18, 78, 40, 0.25);
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-hero-secondary:hover {
+      background: #F4F8F5;
+      border-color: var(--primary);
+    }
+
+    /* ========================================================
+       HERO VISUAL SHOWCASE CARD (Right Column)
+       ======================================================== */
+    .hero-visual-card {
+      background: #FFFFFF;
+      border-radius: 28px;
+      padding: 32px;
+      border: 1px solid rgba(18, 78, 40, 0.1);
+      box-shadow: 0 20px 50px rgba(18, 78, 40, 0.08);
+      position: relative;
+    }
+
+    .visual-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .visual-title {
+      font-family: var(--font-display);
+      font-size: 21px;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .lagos-badge {
+      background: #FFF5E8;
+      color: #A35C00;
+      border: 1px solid #F5D7B0;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .harvest-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .harvest-item {
+      background: #F9FAF8;
+      border: 1px solid #E2EAE4;
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.2s;
+    }
+
+    .harvest-item:hover {
+      border-color: var(--primary-light);
+      background: #FFFFFF;
+      box-shadow: 0 8px 20px rgba(18, 78, 40, 0.06);
+    }
+
+    .item-icon {
+      font-size: 22px;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    .item-heading {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 2px;
+    }
+
+    .item-caption {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .item-price-from {
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .whatsapp-callout-strip {
+      margin-top: 20px;
+      background: #EAF8EE;
+      border: 1px solid #B8E4C4;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .callout-text {
+      font-size: 12.5px;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .callout-phone {
+      font-weight: 800;
+      color: #124E28;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Vetting Header Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 5 of 15 Vetting</span>
+      <span><strong>Yolanda Foods:</strong> High-Impact Hero Banner, WhatsApp Line & Live Search Preview</span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Coverage: Lagos Doorstep Delivery</div>
+  </div>
+
+  <!-- Main Luxury Navigation (Top Banner Removed As Requested) -->
+  <header class="nav-luxury">
+    <div class="nav-inner">
+      <img src="yolanda_master_preview.png" class="nav-brand-logo" alt="Yolanda Foods">
+
+      <ul class="nav-links">
+        <li><a href="#produce">Farm Produce</a></li>
+        <li><a href="#pantry">Pure Honey & Oils</a></li>
+        <li><a href="#pap">Yolanda Pap</a></li>
+        <li><a href="#tubers">Potatoes & Onions</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Direct WhatsApp Line Hooked -->
+        <a href="https://wa.me/2347040275628?text=Hello%20Yolanda%20Foods%2C%20I%20would%20like%20to%20order%20farm-fresh%20staples" target="_blank" class="btn-whatsapp-direct">
+          <span>💬 Order WhatsApp: 07040275628</span>
+        </a>
+        <div class="cart-indicator">
+          <span>Cart</span>
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= STEP 5: HERO BANNER & SEARCH EXPERIENCE ================= -->
+  <section class="hero-container">
+    <div class="hero-text-block">
+      
+      <!-- Live Freshness Badge -->
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        <span>Lagos Doorstep Delivery • Fresh Stock Updated</span>
+      </div>
+
+      <!-- Verified Headline as Requested -->
+      <h1 class="hero-title">
+        Pure, Original, and Fresh Products — <span>From the Farm to Your Kitchen</span>.
+      </h1>
+
+      <p class="hero-subtitle">
+        Carefully harvested and naturally processed pantry essentials delivered across Lagos. Zero middleman warehouse aging, zero adulteration.
+      </p>
+
+      <!-- Interactive Instant Search Box -->
+      <div class="search-wrapper">
+        <div class="search-bar-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            class="search-input" 
+            id="searchInput" 
+            placeholder="Search pure honey, palm oil, pap, potatoes, onions..." 
+            oninput="handleSearch(this.value)"
+            autocomplete="off"
+          />
+          <button class="btn-search">Find Staples</button>
+        </div>
+
+        <!-- Live Instant Results Panel -->
+        <div class="search-results-panel" id="searchResults">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Quick Search Filter Chips -->
+      <div class="quick-tags">
+        <span class="tag-label">Popular:</span>
+        <button class="tag-chip" onclick="quickFill('Pure Honey')">🍯 Pure Honey</button>
+        <button class="tag-chip" onclick="quickFill('Palm Oil')">🌴 Palm Oil</button>
+        <button class="tag-chip" onclick="quickFill('Pap')">🥣 Sweet Yellow Pap</button>
+        <button class="tag-chip" onclick="quickFill('Potatoes')">🥔 Irish & Sweet Potatoes</button>
+        <button class="tag-chip" onclick="quickFill('Onions')">🧅 Fresh Onions</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="hero-actions">
+        <a href="#catalog" class="btn-hero-primary">
+          <span>Explore Farm Store</span>
+          <span>↓</span>
+        </a>
+        <a href="https://wa.me/2347040275628?text=Hello%20Yolanda%20Foods%2C%20I%20want%20to%20place%20an%20order" target="_blank" class="btn-hero-secondary">
+          <span>Direct WhatsApp Chat</span>
+          <span>💬</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Right Side Showcase Card -->
+    <div class="hero-visual-card">
+      <div class="visual-header">
+        <div class="visual-title">The Yolanda Harvest</div>
+        <div class="lagos-badge">
+          <span>📍</span>
+          <span>Lagos Logistics</span>
+        </div>
+      </div>
+
+      <div class="harvest-cards-grid">
+        <div class="harvest-item">
+          <span class="item-icon">🍯</span>
+          <div class="item-heading">Pure Honey</div>
+          <div class="item-caption">100% Raw & Unfiltered</div>
+          <div class="item-price-from">From ₦4,500</div>
+        </div>
+
+        <div class="harvest-item">
+          <span class="item-icon">🌴</span>
+          <div class="item-heading">Palm Oil</div>
+          <div class="item-caption">Cold-Pressed & Thick Red</div>
+          <div class="item-price-from">From ₦3,200</div>
+        </div>
+
+        <div class="harvest-item">
+          <span class="item-icon">🥣</span>
+          <div class="item-heading">Yolanda Pap</div>
+          <div class="item-caption">Yellow, White & Ogi Baba</div>
+          <div class="item-price-from">From ₦2,000</div>
+        </div>
+
+        <div class="harvest-item">
+          <span class="item-icon">🥔</span>
+          <div class="item-heading">Potatoes & Onions</div>
+          <div class="item-caption">Highland-Grown Tubers</div>
+          <div class="item-price-from">From ₦3,800</div>
+        </div>
+      </div>
+
+      <div class="whatsapp-callout-strip">
+        <span class="callout-text">Direct WhatsApp Desk:</span>
+        <a href="tel:07040275628" class="callout-phone" style="text-decoration:none;">07040275628</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Live Search Database for Step 5
+    const productsDB = [
+      { name: "Pure Honey", category: "Pantry & Naturals", price: "₦4,500 - ₦16,000", tag: "100% Unadulterated" },
+      { name: "Palm Oil", category: "Oils & Staples", price: "₦3,200 - ₦14,500", tag: "Cold-Pressed" },
+      { name: "Sweet Yellow Corn Pap", category: "Yolanda Pap", price: "₦2,200 - ₦4,000", tag: "Sweet & Energizing" },
+      { name: "Brown Guinea Corn (Ogi Baba) Pap", category: "Yolanda Pap", price: "₦2,500 - ₦4,600", tag: "High-Fiber Classic" },
+      { name: "Pure White Corn Pap", category: "Yolanda Pap", price: "₦2,000 - ₦3,800", tag: "Mild & Wholesome" },
+      { name: "Roasted Golden Groundnuts", category: "Snacks", price: "₦2,000 - ₦3,800", tag: "Crunchy Hand-Sorted" },
+      { name: "Farm-Fresh Sweet Potatoes", category: "Tubers & Roots", price: "₦4,200 - ₦19,500", tag: "Naturally Sweet" },
+      { name: "Premium Irish Potatoes", category: "Tubers & Roots", price: "₦5,500 - ₦24,000", tag: "Highland Grown" },
+      { name: "Fresh Dry-Skin Onions", category: "Aromatics & Produce", price: "₦3,800 - ₦21,000", tag: "Cured & Pungent" },
+      { name: "Fresh Juicy Limes", category: "Citrus & Detox", price: "₦1,500 - ₦2,800", tag: "High Citrus" }
+    ];
+
+    function handleSearch(query) {
+      const panel = document.getElementById('searchResults');
+      const q = query.trim().toLowerCase();
+
+      if (!q) {
+        panel.classList.remove('open');
+        panel.innerHTML = '';
+        return;
+      }
+
+      const matches = productsDB.filter(p => 
+        p.name.toLowerCase().includes(q) || 
+        p.category.toLowerCase().includes(q) ||
+        p.tag.toLowerCase().includes(q)
+      );
+
+      if (matches.length === 0) {
+        panel.innerHTML = `
+          <div style="padding: 12px; text-align: center; color: #5C6E62; font-size: 13px;">
+            No items matching "<strong>${query}</strong>". <br>Chat with us on WhatsApp for custom bulk requests.
+          </div>
+        `;
+        panel.classList.add('open');
+        return;
+      }
+
+      panel.innerHTML = matches.map(m => `
+        <a href="#catalog" class="result-item" onclick="selectResult('${m.name}')">
+          <div>
+            <div class="result-title">${m.name}</div>
+            <div class="result-meta">${m.category} • <span style="color:#1B7A3E;">${m.tag}</span></div>
+          </div>
+          <div class="result-price">${m.price}</div>
+        </a>
+      `).join('');
+
+      panel.classList.add('open');
+    }
+
+    function quickFill(term) {
+      const input = document.getElementById('searchInput');
+      input.value = term;
+      handleSearch(term);
+    }
+
+    function selectResult(name) {
+      document.getElementById('searchInput').value = name;
+      document.getElementById('searchResults').classList.remove('open');
+    }
+
+    // Close search panel on outside click
+    document.addEventListener('click', (e) => {
+      const wrapper = document.querySelector('.search-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('searchResults').classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>

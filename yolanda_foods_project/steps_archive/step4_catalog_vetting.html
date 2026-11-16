@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 4: Product Catalog & Content Vetting - Yolanda Foods</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --accent-gold: #C29622;
+      --cream: #FAFBF9;
+      --text: #132218;
+      --text-muted: #5C6E62;
+      --border: rgba(18, 78, 40, 0.1);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    body {
+      background: var(--cream);
+      color: var(--text);
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 44px;
+      box-shadow: 0 15px 40px rgba(18, 78, 40, 0.05);
+      border: 1px solid var(--border);
+    }
+    .header {
+      border-bottom: 2px solid #EAF2EC;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+    .step-badge {
+      background: #EAF7ED;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-story-box {
+      background: #F4F8F5;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 16px 16px 0;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    .brand-story-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .brand-story-box p {
+      font-size: 14px;
+      color: #3C5043;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .product-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+    }
+    .product-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 10px 25px rgba(18, 78, 40, 0.08);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .product-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .product-tag {
+      font-size: 11px;
+      font-weight: 700;
+      background: #EAF7ED;
+      color: var(--primary);
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .product-tagline {
+      font-size: 12px;
+      font-style: italic;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .product-copy {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .variants-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+      background: #F9FBF9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .variants-table th {
+      text-align: left;
+      padding: 8px 12px;
+      background: #EAF2EC;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .variants-table td {
+      padding: 8px 12px;
+      border-top: 1px solid #EBEFEA;
+    }
+    .price-col {
+      font-weight: 700;
+      color: var(--primary-dark);
+      text-align: right;
+    }
+    .edit-note {
+      font-size: 12px;
+      color: #925800;
+      background: #FFF8E8;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 30px;
+      border: 1px solid #F5E2B8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="step-badge">Step 4 of 15 • Content & Catalog Vetting</span>
+      <h1>YOLANDA FOODS — Product Catalog & Written Copy</h1>
+      <p class="lead">
+        Please read through and vet every item, pricing tier, sizing option, and written description below. You can change, reword, or add anything you like before we proceed to coding the Hero & Storefront in Step 5.
+      </p>
+    </div>
+
+    <!-- Brand Story & Mission Copy -->
+    <div class="section-title">📖 Brand Mission & Story Copy</div>
+    <div class="brand-story-box">
+      <h3>"Pure, Original, and Fresh Products from the Farm to Your Kitchen."</h3>
+      <p>
+        At <strong>Yolanda Foods</strong>, we believe that the soul of every nourishing meal starts with unadulterated ingredients. We bypass middleman markups and warehouse aging, working directly with trusted rural growers and artisanal food millers to deliver Pure Honey, Palm Oil, farm-fresh tubers, and traditionally fermented pap. Cleanly packaged, hygienically handled, and delivered <strong>within Lagos</strong>, straight to your doorstep.
+      </p>
+    </div>
+
+
+    <div style="background:#0A3319;color:#fff;border-radius:16px;padding:22px 24px;margin-bottom:28px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F2C14E;font-weight:800;margin-bottom:6px;">Delivery &amp; Ordering — Updated</div>
+        <div style="font-size:18px;font-weight:800;">Delivery within Lagos</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.75);">No top banner on the site, as requested.</div>
+      </div>
+      <a href="https://wa.me/2347040275628" target="_blank" rel="noopener" style="background:#22A04F;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:14px 20px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;">
+        <span aria-hidden="true">💬</span> WhatsApp: 07040275628
+      </a>
+    </div>
+
+    <!-- Product Lineup -->
+    <div class="section-title">🛒 Sizing, Units & Default Pricing (₦)</div>
+    <div class="catalog-grid">
+
+      <!-- Honey -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Pure Honey</div>
+          <span class="product-tag">100% Unadulterated</span>
+        </div>
+        <div class="product-tagline">Unfiltered, Natural Sweetener Straight from Apiaries</div>
+        <div class="product-copy">
+          Free from corn syrups, artificial coloring, and refined sugar. Rich in natural enzymes and antioxidants. Perfect for tea, pap, or as a healthy sugar replacement.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>500ml Glass Bottle</td><td class="price-col">₦4,500</td></tr>
+            <tr><td>1 Litre Sealed Bottle</td><td class="price-col">₦8,500</td></tr>
+            <tr><td>2 Litre Bulk Jug</td><td class="price-col">₦16,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Palm Oil -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Palm Oil</div>
+          <span class="product-tag">Cold-Pressed</span>
+        </div>
+        <div class="product-tagline">Thick, Pure Red Oil Sourced Direct from Local Presses</div>
+        <div class="product-copy">
+          Extracted from freshly harvested ripe oil palm fruit. Zero Sudan dye, zero water dilution. Deep natural aroma and color for authentic native stews, soups, and porridge.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>1 Litre Sealed Bottle</td><td class="price-col">₦3,200</td></tr>
+            <tr><td>2 Litre Canister</td><td class="price-col">₦6,000</td></tr>
+            <tr><td>5 Litre Jerrycan</td><td class="price-col">₦14,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Yellow Pap -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Sweet Yellow Corn Pap</div>
+          <span class="product-tag">From Official Flyer</span>
+        </div>
+        <div class="product-tagline">Sweet • Nutritious • Energizing Breakfast</div>
+        <div class="product-copy">
+          Naturally sweet and tasty with a smooth, creamy texture. Packed with Vitamins A, B & E. Keeps you active and energized for longer.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>1kg Vacuum-Sealed Tub</td><td class="price-col">₦2,200</td></tr>
+            <tr><td>2kg Family Value Tub</td><td class="price-col">₦4,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Brown Guinea Corn Pap -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Brown Guinea Corn (Ogi Baba) Pap</div>
+          <span class="product-tag">Superfood Classic</span>
+        </div>
+        <div class="product-tagline">Traditional • Highly Nutritious • High-Fiber</div>
+        <div class="product-copy">
+          Naturally fermented with a rich, earthy flavor. High in dietary fiber for easy digestion and healthy blood sugar management. Rich in iron & magnesium.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>1kg Vacuum-Sealed Tub</td><td class="price-col">₦2,500</td></tr>
+            <tr><td>2kg Family Value Tub</td><td class="price-col">₦4,600</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- White Corn Pap -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Pure White Corn Pap</div>
+          <span class="product-tag">Mild & Wholesome</span>
+        </div>
+        <div class="product-tagline">Mild • Smooth • Wholesome</div>
+        <div class="product-copy">
+          Smooth, soft texture with a pleasant, delicate taste. Excellent source of clean carbohydrates for lasting energy. Rich in calcium for strong bones.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>1kg Vacuum-Sealed Tub</td><td class="price-col">₦2,000</td></tr>
+            <tr><td>2kg Family Value Tub</td><td class="price-col">₦3,800</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Groundnut -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Roasted Golden Groundnuts</div>
+          <span class="product-tag">Crunchy & Fresh</span>
+        </div>
+        <div class="product-tagline">Uniformly Roasted Hand-Selected Peanuts</div>
+        <div class="product-copy">
+          Cleanly hand-sorted, lightly salted, and roasted to a golden crunch. The ultimate pairing for your Yolanda Pap, garri, or daily healthy snack.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>400g Airtight Jar</td><td class="price-col">₦2,000</td></tr>
+            <tr><td>800g Value Pouch</td><td class="price-col">₦3,800</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sweet Potatoes -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Farm-Fresh Sweet Potatoes</div>
+          <span class="product-tag">Sun-Ripened</span>
+        </div>
+        <div class="product-tagline">Naturally Sweet Orange & Red Highland Tubers</div>
+        <div class="product-copy">
+          Clean, firm tubers harvested from loamy soils. Zero spongy cores. High in beta-carotene and dietary fiber for long-lasting stamina.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>5kg Kitchen Bag</td><td class="price-col">₦4,200</td></tr>
+            <tr><td>10kg Family Sack</td><td class="price-col">₦8,000</td></tr>
+            <tr><td>Half Bag (Bulk)</td><td class="price-col">₦19,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Irish Potatoes -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Premium Irish Potatoes</div>
+          <span class="product-tag">Highland Grown</span>
+        </div>
+        <div class="product-tagline">Clean, Thin-Skinned Golden Starchy Tubers</div>
+        <div class="product-copy">
+          Highland-grown Irish potatoes with thin golden skins and firm flesh. Boils, bakes, and fries into a light, fluffy perfection.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>5kg Mesh Bag</td><td class="price-col">₦5,500</td></tr>
+            <tr><td>10kg Pantry Bag</td><td class="price-col">₦10,500</td></tr>
+            <tr><td>Half Bag (Bulk)</td><td class="price-col">₦24,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Fresh Onions -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Fresh Dry-Skin Onions</div>
+          <span class="product-tag">Long-Lasting</span>
+        </div>
+        <div class="product-tagline">Pungent & Aromatic (Red & White Mix)</div>
+        <div class="product-copy">
+          Properly dried and cured to resist early rotting. Packed with crisp moisture and bold flavor to form the savory foundation of your soups and sauces.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>3kg Small Basket</td><td class="price-col">₦3,800</td></tr>
+            <tr><td>7kg Medium Sack</td><td class="price-col">₦8,500</td></tr>
+            <tr><td>Half Bag (Bulk)</td><td class="price-col">₦21,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Fresh Lime -->
+      <div class="product-card">
+        <div class="card-top">
+          <div class="product-name">Fresh Juicy Limes</div>
+          <span class="product-tag">High Citrus</span>
+        </div>
+        <div class="product-tagline">Farm-Picked Organic Green Citrus</div>
+        <div class="product-copy">
+          Freshly harvested and heavy with juice. Loaded with Vitamin C. Perfect for natural detox drinks, salad dressings, and culinary marination.
+        </div>
+        <table class="variants-table">
+          <thead><tr><th>Size / Packaging</th><th style="text-align:right;">Price (₦)</th></tr></thead>
+          <tbody>
+            <tr><td>Small Basket (~15 pcs)</td><td class="price-col">₦1,500</td></tr>
+            <tr><td>Medium Pack (~30 pcs)</td><td class="price-col">₦2,800</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="edit-note">
+      <strong>✍️ Vetting Instructions:</strong> You have full creative control! If you want to change any price, rename a product, adjust a size (e.g. from 5kg to a paint bucket / paint rubber, basket, or carton), or edit any written sentence, just tell me. Updated in this round: <strong>Lagos-only delivery</strong>, <strong>WhatsApp line 07040275628</strong>, and <strong>top banner removed</strong>. Once you approve, we will move to <strong>Step 5: High-Impact Hero Banner &amp; Search Experience</strong>.
+    </div>
+  </div>
+
+  <div style="max-width:1040px;margin:18px auto 0;text-align:center;font-size:13px;color:#5C6E62;">
+    Yolanda Foods · Delivery within Lagos · WhatsApp Order Line:
+    <a href="https://wa.me/2347040275628" style="color:#124E28;font-weight:800;">07040275628</a>
+  </div>
+</body>
+</html>

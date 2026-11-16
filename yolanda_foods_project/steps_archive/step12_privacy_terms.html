@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 12: Privacy Policy & Terms of Service</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      padding-bottom: 90px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wrapper {
+      max-width: 1040px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .pill-badge {
+      background: #E8F7EC;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 20px;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .main-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .main-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .tab-btn {
+      background: #FFFFFF;
+      border: 1.5px solid #CCDCD0;
+      color: var(--primary-dark);
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(18, 78, 40, 0.2);
+    }
+
+    /* Content Card */
+    .legal-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DE;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 8px 30px rgba(18, 78, 40, 0.04);
+      line-height: 1.65;
+    }
+
+    .legal-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #EBF1ED;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legal-section {
+      margin-bottom: 28px;
+    }
+
+    .legal-h2 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legal-h2 span {
+      background: #EAF8EE;
+      color: var(--primary);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: var(--font-sans);
+    }
+
+    .legal-p {
+      font-size: 13.5px;
+      color: #2D3E32;
+      margin-bottom: 10px;
+    }
+
+    .legal-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 8px;
+    }
+
+    .legal-list li {
+      font-size: 13.5px;
+      color: #2D3E32;
+      padding: 6px 0 6px 20px;
+      position: relative;
+    }
+
+    .legal-list li::before {
+      content: "•";
+      color: var(--primary);
+      position: absolute;
+      left: 6px;
+      font-size: 18px;
+      line-height: 1;
+      top: 5px;
+    }
+
+    .highlight-box {
+      background: #F7FAF7;
+      border-left: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 14px 0;
+      font-size: 13px;
+      color: #1A3823;
+    }
+
+    /* Modal Trigger Simulator */
+    .modal-simulator-banner {
+      margin-top: 28px;
+      background: #F1F6F2;
+      border: 1.5px dashed #A5C9B0;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .btn-launch-modal {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Interactive Overlay Modal */
+    .legal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 33, 19, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s;
+    }
+
+    .legal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .legal-modal-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lm-header {
+      padding: 20px 24px;
+      background: #F8FAF8;
+      border-bottom: 1px solid #E1ECE3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lm-body {
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 13.5px;
+      color: #2D3E32;
+      line-height: 1.6;
+    }
+
+    .lm-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #E1ECE3;
+      display: flex;
+      justify-content: flex-end;
+      background: #F8FAF8;
+    }
+
+    .btn-close-modal {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 12 of 15 Vetting</span>
+      <span><strong>Privacy Policy, Terms of Service & Food Safety Guarantee</strong></span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Active WhatsApp Order Line: 07040275628</div>
+  </div>
+
+  <div class="wrapper">
+    
+    <div class="header-box">
+      <span class="pill-badge">Legal & Compliance</span>
+      <h1 class="main-title">Transparency, Privacy & Food Safety</h1>
+      <p class="main-desc">
+        Clearly detailing customer data protection under NDPR and our strict food safety commitments.
+      </p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabPrivacy" onclick="switchTab('privacy')">🔒 Privacy Policy (NDPR Compliant)</button>
+      <button class="tab-btn" id="tabTerms" onclick="switchTab('terms')">📜 Terms & Delivery Policy</button>
+      <button class="tab-btn" id="tabSafety" onclick="switchTab('safety')">🥣 Freshness & Safety Guarantee</button>
+    </div>
+
+    <!-- Content Display Card -->
+    <div class="legal-card" id="legalCardContent">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Interactive Modal Launcher Test -->
+    <div class="modal-simulator-banner">
+      <div style="font-weight: 800; font-size: 14px; color: var(--primary-dark);">
+        ✨ Interactive Modal Experience for Buyers
+      </div>
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">
+        On the main storefront, buyers can click "Privacy Policy" or "Terms" in the footer or checkout to read this without leaving the shopping cart.
+      </p>
+      <button class="btn-launch-modal" onclick="openTestModal()">
+        Open as Slide-up Modal
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Interactive Modal Wrapper -->
+  <div class="legal-overlay" id="legalOverlay" onclick="closeModalOnBackdrop(event)">
+    <div class="legal-modal-card">
+      <div class="lm-header">
+        <h3 id="modalTitle" style="font-family: var(--font-display); font-size: 18px; color: var(--primary-dark);">
+          Privacy Policy — Yolanda Foods
+        </h3>
+        <button onclick="closeLegalModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #536B5A;">✕</button>
+      </div>
+      <div class="lm-body" id="modalBody">
+        <!-- Injected -->
+      </div>
+      <div class="lm-footer">
+        <button class="btn-close-modal" onclick="closeLegalModal()">I Understand & Accept</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const legalData = {
+      privacy: {
+        title: "Privacy Policy",
+        meta: "Last Updated: November 2026 • Compliant with Nigeria Data Protection Regulation (NDPR)",
+        content: `
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Section 1</span> Commitment to Customer Privacy</h2>
+            <p class="legal-p">
+              At <strong>YOLANDA FOODS</strong>, we respect your personal privacy and handle your customer data with absolute transparency. This policy outlines how your information is collected, utilized, and safeguarded when ordering farm-fresh produce through our website and WhatsApp ordering channel.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Section 2</span> Information We Collect</h2>
+            <p class="legal-p">We only collect essential details required to process, fulfill, and deliver your food order within Lagos:</p>
+            <ul class="legal-list">
+              <li><strong>Contact Information:</strong> Full name, WhatsApp phone number, and active mobile number.</li>
+              <li><strong>Delivery Coordinates:</strong> Lagos neighborhood, street address, and closest landmark for courier navigation.</li>
+              <li><strong>Order History:</strong> Product varieties, selected canister/tub sizes, quantities, and order notes.</li>
+              <li><strong>Communication Records:</strong> WhatsApp order confirmation chats and customer feedback.</li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            🛡️ <strong>Zero Data Selling:</strong> We never sell, rent, or trade your contact details to third-party marketing brokers or advertisers. Your phone number is strictly used for order updates and dispatch logistics.
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Section 3</span> Payment Data Security</h2>
+            <p class="legal-p">
+              Yolanda Foods does not store debit card details, CVV codes, or banking passwords. All payments are conducted via verified direct bank transfers or WhatsApp payment confirmations through standard banking rails in Nigeria.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Section 4</span> Data Retention & Customer Rights</h2>
+            <p class="legal-p">
+              Under NDPR, you possess the right to request a copy of the order information we hold, update incorrect address details, or request the deletion of your customer profile from our dispatch roster by contacting our customer care line at <strong>07040275628</strong>.
+            </p>
+          </div>
+        `
+      },
+      terms: {
+        title: "Terms of Service & Lagos Delivery Policy",
+        meta: "Applicable to all orders placed through Yolanda Foods storefront & WhatsApp channel",
+        content: `
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Term 1</span> Scope of Delivery & Operations</h2>
+            <p class="legal-p">
+              Yolanda Foods operates strictly within Lagos State for doorstep deliveries. Orders destined for areas outside our direct dispatch grid must be coordinated through regional haulage hubs or inter-state bus logistics.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Term 2</span> Dispatch Schedules & Lagos Logistics</h2>
+            <p class="legal-p">
+              Standard deliveries are dispatched between 8:00 AM and 5:00 PM, Monday through Saturday. Because agricultural staples (especially freshly fermented pap and pure palm oil) require careful handling, delivery riders are trained to keep containers upright and insulated.
+            </p>
+            <ul class="legal-list">
+              <li><strong>Island Deliveries (Lekki, Ikoyi, VI, Ajah):</strong> Delivered within 24 to 36 hours.</li>
+              <li><strong>Mainland Deliveries (Ikeja, Surulere, Yaba, Magodo, Festac):</strong> Delivered within 24 to 36 hours.</li>
+              <li><strong>Express Same-Day Dispatch:</strong> Available upon special WhatsApp request before 11:00 AM.</li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            📦 <strong>Inspection at Delivery:</strong> Please inspect your canister seals and pap tubs immediately upon handover by the dispatch rider before confirming receipt.
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Term 3</span> Order Cancellations & Modifications</h2>
+            <p class="legal-p">
+              Because our pap is freshly milled and packaged to order, order adjustments or address changes must be communicated via WhatsApp at <strong>07040275628</strong> within 2 hours of placing the order.
+            </p>
+          </div>
+        `
+      },
+      safety: {
+        title: "Freshness & Food Safety Guarantee",
+        meta: "Our 100% Zero-Adulteration Standard for Lagos Kitchens",
+        content: `
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Purity 1</span> Pure Raw Honey Guarantee</h2>
+            <p class="legal-p">
+              Our honey is harvested raw and direct from farm apiaries. It is 100% unadulterated, unheated, and unfiltered. It contains zero corn syrups, caramel additives, or added sucrose. Natural crystallization at cool room temperatures is normal and a hallmark of authentic raw honey.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Purity 2</span> Red Palm Oil Standard</h2>
+            <p class="legal-p">
+              We uphold a strict zero-tolerance policy against Sudan dyes, artificial food colorants, or chemical stabilizers. Our palm oil is naturally dense, rich in beta-carotene, and extracted from fresh ripe oil palm fruit using traditional press techniques.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            🥣 <strong>Preservative-Free Pap Storage:</strong> Our Sweet Yellow Corn, Brown Guinea Corn (Ogi Baba), and White Corn pap contain no sodium benzoate or chemical shelf-extenders. Keep refrigerated in fresh water or freeze for long-lasting freshness.
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-h2"><span>Purity 3</span> Quality Replacement Pledge</h2>
+            <p class="legal-p">
+              If any food product arrives damaged, leaking, or fails our purity promise, notify our support team within 12 hours of delivery with a quick photo, and we will issue an immediate replacement canister or instant refund.
+            </p>
+          </div>
+        `
+      }
+    };
+
+    let activeTab = 'privacy';
+
+    function renderLegalContent() {
+      const data = legalData[activeTab];
+      const card = document.getElementById('legalCardContent');
+      card.innerHTML = `
+        <div class="legal-meta">
+          <span style="font-weight: 800; color: var(--primary);">${data.title}</span>
+          <span>${data.meta}</span>
+        </div>
+        ${data.content}
+      `;
+    }
+
+    function switchTab(tabKey) {
+      activeTab = tabKey;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (tabKey === 'privacy') document.getElementById('tabPrivacy').classList.add('active');
+      if (tabKey === 'terms') document.getElementById('tabTerms').classList.add('active');
+      if (tabKey === 'safety') document.getElementById('tabSafety').classList.add('active');
+      renderLegalContent();
+    }
+
+    function openTestModal() {
+      const data = legalData[activeTab];
+      document.getElementById('modalTitle').textContent = `${data.title} — Yolanda Foods`;
+      document.getElementById('modalBody').innerHTML = data.content;
+      document.getElementById('legalOverlay').classList.add('open');
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legalOverlay').classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'legalOverlay') closeLegalModal();
+    }
+
+    // Initial render
+    renderLegalContent();
+  </script>
+</body>
+</html>

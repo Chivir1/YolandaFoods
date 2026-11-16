@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Luxury Farm Staples & Pantry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #208746;
+      --accent-gold: #D4AF37;
+      --accent-warm: #E29528;
+      --accent-red: #D93838;
+      --cream-bg: #FBFBFA;
+      --surface-card: #FFFFFF;
+      --text-main: #132218;
+      --text-muted: #5C6E62;
+      --border-subtle: rgba(18, 78, 40, 0.08);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      letter-spacing: -0.01em;
+    }
+
+    /* ========================================================
+       PRESTIGE ALIGHT MOTION ENTRANCE (High-End & Cinematic)
+       ======================================================== */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: #081910;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.9s;
+      overflow: hidden;
+    }
+
+    #preloader.dismissed {
+      opacity: 0;
+      transform: scale(1.04);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Ambient luxury light spotlight behind logo */
+    .ambient-glow {
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(32, 135, 70, 0.28) 0%, rgba(212, 175, 55, 0.08) 45%, transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+      animation: pulseGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { transform: scale(0.9); opacity: 0.7; }
+      to { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* Cinematic Golden Framing Lines (Luxury Touch) */
+    .cinema-lines {
+      position: absolute;
+      inset: 40px;
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 16px;
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeIn 1.2s ease-out 0.3s forwards;
+    }
+
+    .corner-decor {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--accent-gold);
+    }
+    .c-tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    .c-tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+    .c-bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+    .c-br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    /* Logo Presentation Stage */
+    .preloader-stage {
+      position: relative;
+      max-width: 620px;
+      width: 88%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      z-index: 2;
+    }
+
+    /* Elegant Liquid Logo Reveal */
+    .hero-vector-logo {
+      width: 100%;
+      max-width: 540px;
+      height: auto;
+      display: block;
+      animation: elegantLogoReveal 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.45));
+    }
+
+    @keyframes elegantLogoReveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(24px);
+        filter: blur(12px) drop-shadow(0 5px 15px rgba(0,0,0,0));
+      }
+      60% {
+        opacity: 1;
+        filter: blur(0px) drop-shadow(0 20px 40px rgba(0,0,0,0.45));
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Refined Luxury Tagline */
+    .brand-subtext {
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    }
+
+    /* Minimalist High-End Progress Indicator */
+    .luxury-meter {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 200px;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.8s forwards;
+    }
+
+    .meter-track {
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .meter-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #208746, #D4AF37, #FF5A5A);
+      animation: meterProgress 2.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    }
+
+    @keyframes meterProgress {
+      0% { width: 0%; }
+      50% { width: 68%; }
+      100% { width: 100%; }
+    }
+
+    .meter-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* Floating Director Controls */
+    .director-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 34, 24, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 8px 18px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000000;
+    }
+
+    .director-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .director-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .director-btn.primary {
+      background: var(--primary);
+      border-color: var(--primary-light);
+    }
+    .director-btn.primary:hover {
+      background: var(--primary-light);
+    }
+
+    /* ========================================================
+       LUXURY HIGH-END STOREFRONT PREVIEW
+       ======================================================== */
+    .top-announcement {
+      background: var(--primary-dark);
+      color: #E2ECE5;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 9px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-luxury {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(18, 78, 40, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand-logo {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-luxury-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(18, 78, 40, 0.2);
+    }
+
+    .btn-luxury-primary:hover {
+      background: var(--primary-light);
+      box-shadow: 0 6px 18px rgba(18, 78, 40, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-luxury-outline {
+      background: transparent;
+      color: var(--primary);
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      border: 1px solid rgba(18, 78, 40, 0.25);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-luxury-outline:hover {
+      background: rgba(18, 78, 40, 0.04);
+      border-color: var(--primary);
+    }
+
+    /* Luxury Hero */
+    .hero-section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 48px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-section { grid-template-columns: 1fr; padding: 40px 20px; }
+      .nav-links { display: none; }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #EBF5EE;
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      border: 1px solid rgba(18, 78, 40, 0.15);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 46px;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+      font-style: italic;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Hero Showcase Card */
+    .showcase-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 50px rgba(18, 78, 40, 0.06);
+      position: relative;
+    }
+
+    .showcase-tag {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #FFF4E5;
+      color: #9C5800;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .item-pill {
+      background: #F8FAF8;
+      border: 1px solid #E5EDE7;
+      border-radius: 14px;
+      padding: 14px;
+      transition: all 0.2s;
+    }
+
+    .item-pill:hover {
+      border-color: var(--primary-light);
+      background: #FFFFFF;
+      box-shadow: 0 6px 18px rgba(18, 78, 40, 0.05);
+    }
+
+    .item-pill h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .item-pill p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Animations helper */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PRESTIGE CINEMATIC PRELOADER ================= -->
+  <div id="preloader">
+    <!-- Ambient luxury glow -->
+    <div class="ambient-glow"></div>
+
+    <!-- Framing architectural hairline -->
+    <div class="cinema-lines">
+      <div class="corner-decor c-tl"></div>
+      <div class="corner-decor c-tr"></div>
+      <div class="corner-decor c-bl"></div>
+      <div class="corner-decor c-br"></div>
+    </div>
+
+    <div class="preloader-stage">
+      <!-- High-End Vector Logo with Corner Splashes & 3-Point Leaf -->
+      <img src="yolanda_master_preview.png" class="hero-vector-logo" id="preloader-logo" alt="Yolanda Foods">
+
+      <div class="brand-subtext">Authentic Farm Staples & Pantry</div>
+
+      <!-- Luxury Loading Meter -->
+      <div class="luxury-meter">
+        <div class="meter-track">
+          <div class="meter-fill" id="meter-fill"></div>
+        </div>
+        <div class="meter-label">Curating Fresh Harvest</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LUXURY DIRECTOR CONTROLS ================= -->
+  <div class="director-bar">
+    <span style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.1em;">Cinematic Preview:</span>
+    <button class="director-btn primary" onclick="replayEntrance()">
+      <span>↻ Replay Entrance</span>
+    </button>
+    <button class="director-btn" onclick="toggleEntrance()">
+      <span>Explore Storefront</span>
+    </button>
+  </div>
+
+  <!-- ================= LUXURY HIGH-END STOREFRONT ================= -->
+  <div class="storefront-wrapper">
+    <!-- Top Bar -->
+    <div class="top-announcement">
+      <span>✦ Farm-Fresh Harvest Guaranteed</span>
+      <span>•</span>
+      <span>100% Raw Unadulterated Staples</span>
+      <span>•</span>
+      <span>Direct Doorstep Logistics</span>
+    </div>
+
+    <!-- Luxury Navigation -->
+    <header class="nav-luxury">
+      <div class="nav-inner">
+        <img src="yolanda_master_preview.png" class="nav-brand-logo" alt="Yolanda Foods">
+
+        <ul class="nav-links">
+          <li><a href="#produce">Farm Produce</a></li>
+          <li><a href="#pantry">Raw Staples & Honey</a></li>
+          <li><a href="#pap">Artisan Pap</a></li>
+          <li><a href="#quality">The Yolanda Standard</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="btn-luxury-outline">Track Order</button>
+          <button class="btn-luxury-primary">
+            <span>Shop Fresh</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Showcase -->
+    <main class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span>🌿 Hand-Selected Farm Staples</span>
+        </div>
+        <h1 class="hero-title">
+          Purity, Freshness & Tradition — Delivered <span>Straight to Your Table</span>.
+        </h1>
+        <p class="hero-desc">
+          Experience natural culinary essentials carefully sourced directly from trusted growers: 100% wild raw honey, cold-pressed traditional palm oil, farm-fresh tubers, and stone-ground traditional pap varieties.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn-luxury-primary" style="padding: 14px 28px; font-size: 14px;">
+            Explore the Collection
+          </button>
+          <button class="btn-luxury-outline" style="padding: 14px 24px; font-size: 14px;">
+            Order via WhatsApp Business
+          </button>
+        </div>
+      </div>
+
+      <!-- High-End Feature Showcase -->
+      <div class="showcase-card">
+        <span class="showcase-tag">Today's Fresh Batch</span>
+        <h3 style="font-size: 20px; font-family: var(--font-display); color: var(--primary-dark); margin-bottom: 6px;">The Harvest Pantry</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Pristine kitchen essentials packaged with zero chemical preservatives.</p>
+
+        <div class="showcase-grid">
+          <div class="item-pill">
+            <h4>Pure Raw Honey</h4>
+            <p>Unfiltered & naturally aged</p>
+          </div>
+          <div class="item-pill">
+            <h4>Traditional Palm Oil</h4>
+            <p>100% unadulterated & rich</p>
+          </div>
+          <div class="item-pill">
+            <h4>Triple-Variety Pap</h4>
+            <p>Yellow corn, white & brown ogi</p>
+          </div>
+          <div class="item-pill">
+            <h4>Highland Tubers</h4>
+            <p>Sweet & Irish potatoes, onions</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let exitTimer;
+
+    function runExit() {
+      clearTimeout(exitTimer);
+      exitTimer = setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('dismissed');
+        }
+      }, 2800);
+    }
+
+    function replayEntrance() {
+      const preloader = document.getElementById('preloader');
+      preloader.classList.remove('dismissed');
+
+      // Reset Logo animation
+      const logo = document.getElementById('preloader-logo');
+      if (logo) {
+        logo.style.animation = 'none';
+        logo.offsetHeight; // trigger reflow
+        logo.style.animation = 'elegantLogoReveal 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards';
+      }
+
+      // Reset Meter
+      const meter = document.getElementById('meter-fill');
+      if (meter) {
+        meter.style.animation = 'none';
+        meter.offsetHeight;
+        meter.style.animation = 'meterProgress 2.4s cubic-bezier(0.65, 0, 0.35, 1) forwards';
+      }
+
+      runExit();
+    }
+
+    function toggleEntrance() {
+      const preloader = document.getElementById('preloader');
+      preloader.classList.toggle('dismissed');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runExit();
+    });
+  </script>
+</body>
+</html>

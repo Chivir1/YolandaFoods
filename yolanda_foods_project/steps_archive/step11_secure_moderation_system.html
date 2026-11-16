@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Secure Moderator Authentication & Review Approval Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --accent-red: #D93838;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding-bottom: 120px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wrapper {
+      max-width: 1200px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    /* Security Architecture Guide Card */
+    .security-guide-card {
+      background: #0E2918;
+      color: #E2ECE5;
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      border: 1px solid #1E5C35;
+      box-shadow: 0 10px 30px rgba(10, 33, 19, 0.2);
+    }
+
+    .security-guide-card h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+
+    .security-pills {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0 20px;
+    }
+
+    .sec-pill {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #A3FFBE;
+    }
+
+    .sec-bullets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      font-size: 13px;
+      color: #C3D9CB;
+      line-height: 1.55;
+    }
+
+    .sec-bullets strong {
+      color: #FFFFFF;
+    }
+
+    /* Portal Main Container */
+    .portal-main-box {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DE;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 6px 24px rgba(18, 78, 40, 0.04);
+    }
+
+    .portal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #EBF1ED;
+    }
+
+    .portal-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    /* Moderator Status Bar */
+    .mod-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .mod-status-badge.logged-out {
+      background: #FDF1F1;
+      color: #D93838;
+      border: 1px solid #F5C6C6;
+    }
+
+    .mod-status-badge.logged-in {
+      background: #EAF8EE;
+      color: var(--primary);
+      border: 1px solid #BFE3C9;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .logged-out .status-dot { background: #D93838; }
+    .logged-in .status-dot { background: #25D366; }
+
+    /* Login Form Box */
+    .login-box {
+      max-width: 440px;
+      margin: 30px auto;
+      background: #F9FAF8;
+      border: 1.5px solid #CCDCD0;
+      border-radius: 20px;
+      padding: 30px 26px;
+      text-align: center;
+    }
+
+    .login-icon {
+      font-size: 44px;
+      margin-bottom: 10px;
+    }
+
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 21px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .login-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .f-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .f-input {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1.5px solid #CCDCD0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13.5px;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .f-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(18, 78, 40, 0.1);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--primary-light);
+    }
+
+    .login-hint {
+      margin-top: 14px;
+      font-size: 11.5px;
+      color: #7B8E81;
+      background: #FFFFFF;
+      border: 1px dashed #CCDCD0;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    /* Moderator Dashboard (Visible after login) */
+    .moderator-dashboard {
+      display: none;
+    }
+
+    .moderator-dashboard.active {
+      display: block;
+    }
+
+    .dash-summary-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .dash-stat-card {
+      background: #F8FAF8;
+      border: 1px solid #DCE6DE;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .stat-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Moderation Queue Item */
+    .queue-card {
+      background: #FFFDF8;
+      border: 1.5px solid #EADBAC;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .queue-info {
+      flex: 1;
+    }
+
+    .q-author {
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .q-meta {
+      font-size: 12px;
+      color: #8C6D18;
+      margin: 4px 0 8px;
+    }
+
+    .q-text {
+      font-size: 13.5px;
+      color: #2D3E32;
+      line-height: 1.55;
+      font-style: italic;
+      background: #FFFFFF;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #EBE4CD;
+    }
+
+    .q-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 140px;
+    }
+
+    .btn-mod-approve {
+      background: #1B7A3E;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-mod-approve:hover {
+      background: #146131;
+    }
+
+    .btn-mod-reject {
+      background: #FDF1F1;
+      color: #D93838;
+      border: 1.5px solid #F5C6C6;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-mod-reject:hover {
+      background: #D93838;
+      color: #FFFFFF;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1.5px solid #D5E2D8;
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-logout:hover {
+      background: #F0F4F1;
+    }
+
+    /* Public Live Approved Feed Section */
+    .public-feed-wrap {
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 2px dashed #E1ECE3;
+    }
+
+    .feed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .feed-card {
+      background: #F8FAF8;
+      border: 1px solid #E1ECE3;
+      border-radius: 14px;
+      padding: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 11 Security Feature</span>
+      <span><strong>Secure Moderator Login & Review Vetting Architecture</strong></span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Active WhatsApp Line: 07040275628</div>
+  </div>
+
+  <div class="wrapper">
+
+    <!-- 1. Technical Security Architecture Guide -->
+    <div class="security-guide-card">
+      <h2>🛡️ Recommended Architecture for a Production-Secure Moderator System</h2>
+      <p style="font-size: 13.5px; color: #D5E8DC;">
+        To make sure unauthorized people can never tamper with reviews or push fake approvals, here is the industry-standard 4-tier security model:
+      </p>
+
+      <div class="security-pills">
+        <span class="sec-pill">1. Cryptographic Password Hashing (Argon2 / bcrypt)</span>
+        <span class="sec-pill">2. HttpOnly SameSite JWT Tokens</span>
+        <span class="sec-pill">3. Role-Based Access Control (RBAC)</span>
+        <span class="sec-pill">4. Audit Trail & Rate-Limiting</span>
+      </div>
+
+      <div class="sec-bullets">
+        <div>
+          <strong>• Separate Protected Admin Route:</strong> Moderator portal should never be on a predictable public URL (e.g. <code>/yolanda-admin-gate</code> instead of <code>/admin</code>).
+        </div>
+        <div>
+          <strong>• Two-Factor Authentication (2FA / WhatsApp OTP):</strong> Moderator gets a 6-digit confirmation pin sent to their phone before sensitive publishing actions.
+        </div>
+        <div>
+          <strong>• Strict Input Sanitization (XSS Defense):</strong> All client reviews are stripped of raw HTML/scripts before being saved to the database.
+        </div>
+        <div>
+          <strong>• Audit Log:</strong> Every "Approve" or "Reject" logs the moderator's ID, timestamp, and IP address for full accountability.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Interactive Working Simulator -->
+    <div class="portal-main-box">
+      <div class="portal-header">
+        <div>
+          <h1 class="portal-title">Yolanda Foods — Review Moderation Desk</h1>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 3px;">
+            Client reviews are held in isolation until vetted by an authenticated moderator.
+          </p>
+        </div>
+
+        <div id="statusBadge" class="mod-status-badge logged-out">
+          <span class="status-dot"></span>
+          <span id="statusText">Moderator Logged Out</span>
+        </div>
+      </div>
+
+      <!-- State A: Login Form (When Logged Out) -->
+      <div class="login-box" id="loginBox">
+        <div class="login-icon">🔐</div>
+        <h3 class="login-title">Moderator Sign In</h3>
+        <p class="login-desc">Enter your authorized credentials to access the vetting queue.</p>
+
+        <div class="form-group">
+          <label class="f-label">Moderator Username</label>
+          <input type="text" class="f-input" id="modUser" value="yolanda_admin" placeholder="Enter username">
+        </div>
+
+        <div class="form-group">
+          <label class="f-label">Password</label>
+          <input type="password" class="f-input" id="modPass" value="yolanda2026" placeholder="Enter password">
+        </div>
+
+        <button class="btn-login" onclick="attemptLogin()">
+          Unlock Moderation Desk
+        </button>
+
+        <div class="login-hint">
+          <strong>Testing Credentials:</strong> User: <code>yolanda_admin</code> • Pass: <code>yolanda2026</code>
+        </div>
+      </div>
+
+      <!-- State B: Moderator Dashboard (When Authenticated) -->
+      <div class="moderator-dashboard" id="moderatorDash">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <span style="font-weight: 800; font-size: 14px; color: var(--primary);">Welcome back, Yolanda Moderator!</span>
+            <div style="font-size: 12px; color: var(--text-muted);">Session secured with simulated Bearer Auth Token</div>
+          </div>
+          <button class="btn-logout" onclick="logoutModerator()">Sign Out ✕</button>
+        </div>
+
+        <!-- Metrics -->
+        <div class="dash-summary-row">
+          <div class="dash-stat-card">
+            <div class="stat-val" id="statPendingCount" style="color: #A17006;">2</div>
+            <div class="stat-lbl">Pending Review Vetting</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="stat-val" id="statApprovedCount" style="color: var(--primary);">1</div>
+            <div class="stat-lbl">Live Approved on Store</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="stat-val" id="statRejectedCount" style="color: #D93838;">0</div>
+            <div class="stat-lbl">Rejected / Flagged</div>
+          </div>
+        </div>
+
+        <!-- The Vetting Queue -->
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--primary-dark); margin-bottom: 12px;">
+          Reviews Awaiting Your Approval:
+        </h3>
+        <div id="queueList">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Public Feed Preview Below -->
+      <div class="public-feed-wrap">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 20px; color: var(--primary-dark);">
+              Live Storefront Reviews (Public View)
+            </h3>
+            <p style="font-size: 12.5px; color: var(--text-muted);">Only approved reviews appear here for customers to see.</p>
+          </div>
+          <button class="btn-login" style="width: auto; padding: 8px 16px; font-size: 12.5px; margin: 0;" onclick="simulateCustomerReview()">
+            + Simulate New Customer Submission
+          </button>
+        </div>
+
+        <div class="feed-grid" id="publicFeed">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // System State
+    let isAuthenticated = false;
+
+    // Database
+    let pendingReviews = [
+      {
+        id: "REV-101",
+        author: "Mrs. Chioma Okafor",
+        location: "Lekki Phase 1",
+        product: "Palm Oil (2 Litre Canister)",
+        rating: 5,
+        timestamp: "Today, 10:14 AM",
+        text: "The palm oil is thick, deep red, and smells like authentic traditional village press. Zero artificial dyes or water. Our traditional soup tasted completely different!"
+      },
+      {
+        id: "REV-102",
+        author: "Tunde Bakare",
+        location: "Ikeja GRA",
+        product: "Brown Guinea Corn (Ogi Baba) Pap",
+        rating: 5,
+        timestamp: "Today, 11:30 AM",
+        text: "Very smooth Ogi Baba without any sour chemical aftertaste. Sits lightly on the stomach and pairs well with akara."
+      }
+    ];
+
+    let approvedReviews = [
+      {
+        id: "REV-001",
+        author: "Amina Al-Hassan",
+        location: "Gbagada, Lagos",
+        product: "Pure Honey (1 Litre Bottle)",
+        rating: 5,
+        timestamp: "Yesterday",
+        text: "The pure honey passed all my purity tests—no sugar crystallization or syrupy aftertaste. Doorstep delivery was same-day!"
+      }
+    ];
+
+    let rejectedCount = 0;
+
+    function attemptLogin() {
+      const u = document.getElementById('modUser').value.trim();
+      const p = document.getElementById('modPass').value.trim();
+
+      if (u === 'yolanda_admin' && p === 'yolanda2026') {
+        isAuthenticated = true;
+        updateAuthUI();
+        renderQueue();
+      } else {
+        alert('Invalid credentials. Use testing username: yolanda_admin, password: yolanda2026');
+      }
+    }
+
+    function logoutModerator() {
+      isAuthenticated = false;
+      updateAuthUI();
+    }
+
+    function updateAuthUI() {
+      const statusBadge = document.getElementById('statusBadge');
+      const statusText = document.getElementById('statusText');
+      const loginBox = document.getElementById('loginBox');
+      const dash = document.getElementById('moderatorDash');
+
+      if (isAuthenticated) {
+        statusBadge.className = 'mod-status-badge logged-in';
+        statusText.textContent = 'Authenticated: yolanda_admin';
+        loginBox.style.display = 'none';
+        dash.className = 'moderator-dashboard active';
+      } else {
+        statusBadge.className = 'mod-status-badge logged-out';
+        statusText.textContent = 'Moderator Logged Out';
+        loginBox.style.display = 'block';
+        dash.className = 'moderator-dashboard';
+      }
+
+      updateStats();
+    }
+
+    function updateStats() {
+      document.getElementById('statPendingCount').textContent = pendingReviews.length;
+      document.getElementById('statApprovedCount').textContent = approvedReviews.length;
+      document.getElementById('statRejectedCount').textContent = rejectedCount;
+    }
+
+    function renderQueue() {
+      const container = document.getElementById('queueList');
+      updateStats();
+
+      if (pendingReviews.length === 0) {
+        container.innerHTML = `
+          <div style="background: #F4F8F5; border: 1.5px dashed #B8DEC3; border-radius: 12px; padding: 24px; text-align: center; color: #124E28;">
+            ✓ All caught up! Zero pending reviews waiting for vetting.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingReviews.map((r, idx) => `
+        <div class="queue-card">
+          <div class="queue-info">
+            <div class="q-author">
+              <span>${r.author}</span>
+              <span style="font-size: 12px; font-weight: normal; color: var(--text-muted);">(${r.location})</span>
+              <span style="color: #DDA216;">${'★'.repeat(r.rating)}</span>
+            </div>
+            <div class="q-meta">
+              Purchased: <strong>${r.product}</strong> • Submitted: ${r.timestamp} • ID: <code>${r.id}</code>
+            </div>
+            <div class="q-text">"${r.text}"</div>
+          </div>
+
+          <div class="q-actions">
+            <button class="btn-mod-approve" onclick="approveReview(${idx})">
+              <span>✓ Approve & Publish</span>
+            </button>
+            <button class="btn-mod-reject" onclick="rejectReview(${idx})">
+              <span>✕ Reject & Discard</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function approveReview(idx) {
+      const item = pendingReviews.splice(idx, 1)[0];
+      approvedReviews.unshift(item);
+      renderQueue();
+      renderPublicFeed();
+    }
+
+    function rejectReview(idx) {
+      pendingReviews.splice(idx, 1);
+      rejectedCount++;
+      renderQueue();
+    }
+
+    function renderPublicFeed() {
+      const feed = document.getElementById('publicFeed');
+      if (approvedReviews.length === 0) {
+        feed.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--text-muted);">
+            No reviews published yet.
+          </div>
+        `;
+        return;
+      }
+
+      feed.innerHTML = approvedReviews.map(a => `
+        <div class="feed-card">
+          <div style="color: #DDA216; font-size: 14px; margin-bottom: 6px;">${'★'.repeat(a.rating)}</div>
+          <span style="font-size: 11px; font-weight: 800; color: var(--primary); background: #EAF8EE; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">
+            ${a.product}
+          </span>
+          <p style="font-size: 13px; color: #2D3E32; font-style: italic; line-height: 1.5; margin-bottom: 12px;">
+            "${a.text}"
+          </p>
+          <div style="font-weight: 800; font-size: 12.5px; color: var(--primary-dark); display: flex; align-items: center; gap: 4px;">
+            <span>${a.author}</span>
+            <span style="color: #25D366; font-size: 11px;">✓ Verified Buyer</span>
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted);">${a.location}</div>
+        </div>
+      `).join('');
+    }
+
+    function simulateCustomerReview() {
+      const testNames = ["Emeka Nwosu", "Folake Adeleke", "Babajide S.", "Halima Bello"];
+      const testLocations = ["Surulere, Lagos", "Maryland, Lagos", "Ajah, Lagos", "Yaba, Lagos"];
+      const testProds = ["Pure White Corn Pap", "Farm-Fresh Sweet Potatoes", "Pure Honey (500ml)", "Roasted Golden Groundnuts"];
+      const testTexts = [
+        "Delivered right on time. Very clean packaging, zero leaks in transit!",
+        "The sweet potatoes were naturally sweet and fried very fluffy. Will definitely reorder.",
+        "Smooth texture, my kids loved the yellow corn pap for breakfast.",
+        "Very crisp groundnuts, fresh aroma!"
+      ];
+
+      const rand = Math.floor(Math.random() * testNames.length);
+
+      pendingReviews.push({
+        id: `REV-${Math.floor(100 + Math.random() * 900)}`,
+        author: testNames[rand],
+        location: testLocations[rand],
+        product: testProds[rand],
+        rating: 5,
+        timestamp: "Just now",
+        text: testTexts[rand]
+      });
+
+      if (isAuthenticated) {
+        renderQueue();
+      } else {
+        updateStats();
+      }
+
+      alert(`Simulated new submission from ${testNames[rand]}! It is now held in the Pending Queue for moderator vetting.`);
+    }
+
+    // Initialize public feed
+    renderPublicFeed();
+    updateAuthUI();
+  </script>
+</body>
+</html>

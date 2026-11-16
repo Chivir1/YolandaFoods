@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yolanda Foods — Step 9: Interactive Cart Drawer & Order Summary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #124E28;
+      --primary-dark: #0A3319;
+      --primary-light: #1D7A3E;
+      --accent-gold: #DDA216;
+      --accent-red: #D93838;
+      --cream-bg: #F7FAF6;
+      --surface: #FFFFFF;
+      --text: #132218;
+      --text-muted: #536B5A;
+      --border: rgba(18, 78, 40, 0.12);
+      --font-display: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-friendly: 'Fredoka', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--cream-bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 120px;
+    }
+
+    .vetting-bar {
+      background: #0B2414;
+      color: #E2ECE5;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(221, 162, 22, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .vetting-tag {
+      background: var(--primary-light);
+      color: white;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wrapper {
+      max-width: 1280px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Top Quick Trigger */
+    .top-cart-btn {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(18, 78, 40, 0.2);
+      transition: all 0.2s;
+    }
+
+    .top-cart-btn:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    /* Product Grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .catalog-card {
+      background: #FFFFFF;
+      border: 1.5px solid #DCE7DE;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+
+    .catalog-card:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 8px 22px rgba(18, 78, 40, 0.08);
+    }
+
+    .card-icon-tag {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .p-icon {
+      font-size: 32px;
+    }
+
+    .p-cat {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--primary);
+      background: #EAF7EE;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .p-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 2px;
+    }
+
+    .p-tagline {
+      font-size: 11.5px;
+      color: #A17006;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .p-size-select {
+      width: 100%;
+      background: #F9FAF8;
+      border: 1.5px solid #CCDCD0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .card-bot-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid #EEF3EF;
+    }
+
+    .p-price-disp {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      font-family: var(--font-friendly);
+    }
+
+    .btn-add-item {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add-item:hover {
+      background: var(--primary-light);
+    }
+
+    /* ========================================================
+       STEP 9: SLIDE-OUT CART DRAWER & ORDER SUMMARY
+       ======================================================== */
+    .cart-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 33, 19, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 99999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cart-drawer-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 460px;
+      background: #FFFFFF;
+      z-index: 100000;
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cart-drawer-backdrop.open .cart-drawer {
+      transform: translateX(0);
+    }
+
+    /* Drawer Header */
+    .drawer-header {
+      background: #F8FAF8;
+      border-bottom: 1px solid #DCE6DF;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer-title {
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .drawer-badge {
+      background: #E8F7EC;
+      color: var(--primary);
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .drawer-close-btn {
+      background: #FFFFFF;
+      border: 1px solid #D1DED5;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      cursor: pointer;
+    }
+
+    .drawer-close-btn:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    /* Delivery Area Notice Banner */
+    .drawer-delivery-strip {
+      background: #EAF8EE;
+      border-bottom: 1px solid #CFE8D7;
+      padding: 9px 24px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Scrollable Cart Items Area */
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .empty-cart-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .cart-item-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #EAF0EC;
+    }
+
+    .item-icon-box {
+      width: 48px;
+      height: 48px;
+      background: #F2F7F3;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      border: 1px solid #DEE8E1;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-name-line {
+      font-weight: 800;
+      font-size: 14.5px;
+      color: var(--primary-dark);
+      margin-bottom: 2px;
+    }
+
+    .item-size-line {
+      font-size: 12px;
+      color: #82620E;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .item-controls-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Stepper inside cart */
+    .drawer-stepper {
+      display: inline-flex;
+      align-items: center;
+      background: #F1F6F2;
+      border: 1px solid #CFDEC2;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .d-qty-btn {
+      background: transparent;
+      border: none;
+      width: 26px;
+      height: 28px;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      cursor: pointer;
+    }
+
+    .d-qty-btn:hover {
+      background: #E2ECE5;
+    }
+
+    .d-qty-val {
+      width: 24px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+
+    .item-price-calc {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--primary);
+    }
+
+    .item-delete-btn {
+      background: transparent;
+      border: none;
+      color: #A0B2A6;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+
+    .item-delete-btn:hover {
+      color: #D93838;
+    }
+
+    /* Delivery Note Input Box */
+    .delivery-note-box {
+      margin-top: 14px;
+      background: #F8FAF8;
+      border: 1px solid #E1ECE3;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .delivery-note-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .delivery-note-input {
+      width: 100%;
+      border: 1px solid #D2E0D5;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      font-family: var(--font-sans);
+      resize: vertical;
+      min-height: 50px;
+      outline: none;
+    }
+
+    /* Drawer Footer & Checkout Summary */
+    .drawer-footer {
+      background: #F8FAF8;
+      border-top: 1px solid #DCE6DF;
+      padding: 20px 24px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+
+    .summary-row.total-row {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      padding-top: 10px;
+      border-top: 1px dashed #CCDCD0;
+      margin-bottom: 16px;
+    }
+
+    .total-amount {
+      color: var(--primary);
+      font-family: var(--font-friendly);
+      font-size: 20px;
+    }
+
+    .btn-checkout-flow {
+      width: 100%;
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(18, 78, 40, 0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-checkout-flow:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-wa-instant {
+      width: 100%;
+      background: #25D366;
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      box-shadow: 0 3px 10px rgba(37, 211, 102, 0.2);
+    }
+
+    .btn-wa-instant:hover {
+      background: #1EBE5B;
+    }
+
+    /* Demure Floating Order Pill */
+    .demure-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(10, 33, 19, 0.94);
+      color: #FFFFFF;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(221, 162, 22, 0.35);
+      border-radius: 40px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      z-index: 1000;
+      transition: all 0.2s;
+    }
+
+    .demure-pill:hover {
+      transform: translateY(-2px);
+      background: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vetting Bar -->
+  <div class="vetting-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="vetting-tag">Step 9 of 15 Vetting</span>
+      <span><strong>Interactive Cart Drawer & Order Summary</strong></span>
+    </div>
+    <div style="color: #A3D4B3; font-size: 11px;">Active Test Line: 07040275628</div>
+  </div>
+
+  <div class="wrapper">
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">Yolanda Foods Cart Experience</h1>
+        <p class="section-sub">Add farm staples below and test the live slide-out cart drawer with quantity editing.</p>
+      </div>
+
+      <button class="top-cart-btn" onclick="openCartDrawer()">
+        <span>🛒 View Cart</span>
+        <span style="background: var(--accent-gold); color: #0A3319; padding: 2px 8px; border-radius: 12px; font-size: 12px;" id="topCartBadge">3 items</span>
+      </button>
+    </div>
+
+    <!-- Quick Add Catalog Grid -->
+    <div class="catalog-grid" id="catalogGrid">
+      <!-- Injected via JS -->
+    </div>
+  </div>
+
+  <!-- ================= SLIDE-OUT CART DRAWER ================= -->
+  <div class="cart-drawer-backdrop" id="cartBackdrop" onclick="closeCartOnBackdrop(event)">
+    <div class="cart-drawer" id="cartDrawer">
+      
+      <!-- Drawer Header -->
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <span>Your Basket</span>
+          <span class="drawer-badge" id="drawerItemCount">0 items</span>
+        </div>
+        <button class="drawer-close-btn" onclick="closeCartDrawer()" title="Close cart">✕</button>
+      </div>
+
+      <!-- Lagos Logistics Strip -->
+      <div class="drawer-delivery-strip">
+        <span>📍</span>
+        <span>Lagos Doorstep Dispatch • WhatsApp: 07040275628</span>
+      </div>
+
+      <!-- Scrollable Cart Items List -->
+      <div class="drawer-body" id="drawerBody">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Drawer Footer with Subtotal & Actions -->
+      <div class="drawer-footer" id="drawerFooter">
+        <div class="summary-row">
+          <span>Items Subtotal:</span>
+          <span style="font-weight: 700; color: var(--text);" id="subtotalVal">₦0</span>
+        </div>
+        <div class="summary-row">
+          <span>Estimated Lagos Delivery:</span>
+          <span style="color: var(--primary); font-weight: 700;">Calculated at Checkout</span>
+        </div>
+        <div class="summary-row total-row">
+          <span>Estimated Total:</span>
+          <span class="total-amount" id="totalVal">₦0</span>
+        </div>
+
+        <!-- Checkout Buttons -->
+        <button class="btn-checkout-flow" onclick="alert('In Step 10, this opens the multi-channel Checkout Modal (WhatsApp Order Payload + Online Bank Transfer / COD options)!')">
+          <span>Proceed to Order Checkout</span>
+          <span>→</span>
+        </button>
+
+        <a id="waDirectOrderBtn" href="#" target="_blank" class="btn-wa-instant">
+          <span>💬 Instant WhatsApp Order (07040275628)</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Demure Floating Order Pill -->
+  <div class="demure-pill" onclick="openCartDrawer()">
+    <span style="font-size: 18px;">🛒</span>
+    <span style="font-size: 13px; font-weight: 800;" id="pillCount">Cart (3)</span>
+    <span style="color: #DDA216; font-size: 13.5px; font-weight: 800;" id="pillAmount">₦12,700</span>
+    <span style="font-size: 12px; opacity: 0.8;">View →</span>
+  </div>
+
+  <script>
+    // Initial Test Items in Cart
+    let cart = [
+      { id: "honey", name: "Pure Honey", variant: "1 Litre Food-Grade Bottle", price: 8500, qty: 1, icon: "🍯" },
+      { id: "yellowpap", name: "Sweet Yellow Corn Pap", variant: "1kg Vacuum-Sealed Tub", price: 2200, qty: 1, icon: "🥣" },
+      { id: "groundnut", name: "Roasted Golden Groundnuts", variant: "400g Airtight Jar", price: 2000, qty: 1, icon: "🥜" }
+    ];
+
+    // Catalog Samples for Quick Adding
+    const catalogSamples = [
+      {
+        id: "palmoil",
+        name: "Palm Oil",
+        tagline: "Cold-Pressed, Thick Red Palm Oil",
+        icon: "🌴",
+        cat: "Oils",
+        variants: [
+          { label: "1 Litre Sealed Bottle", price: 3200 },
+          { label: "2 Litre Canister", price: 6000 },
+          { label: "5 Litre Jerrycan", price: 14500 }
+        ]
+      },
+      {
+        id: "brownpap",
+        name: "Brown Guinea Corn (Ogi Baba)",
+        tagline: "Traditional • High-Fiber Superfood",
+        icon: "🌾",
+        cat: "Pap",
+        variants: [
+          { label: "1kg Vacuum Tub", price: 2500 },
+          { label: "2kg Family Tub", price: 4600 }
+        ]
+      },
+      {
+        id: "irishpot",
+        name: "Premium Irish Potatoes",
+        tagline: "Highland-Grown Firm Flesh",
+        icon: "🥔",
+        cat: "Tubers",
+        variants: [
+          { label: "5kg Mesh Bag", price: 5500 },
+          { label: "10kg Pantry Bag", price: 10500 },
+          { label: "Half Bag Bulk", price: 24000 }
+        ]
+      },
+      {
+        id: "onions",
+        name: "Fresh Dry-Skin Onions",
+        tagline: "Aromatic, Cured Pantry Staple",
+        icon: "🧅",
+        cat: "Produce",
+        variants: [
+          { label: "3kg Small Basket", price: 3800 },
+          { label: "7kg Medium Sack", price: 8500 },
+          { label: "Half Bag Bulk", price: 21000 }
+        ]
+      }
+    ];
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalogGrid');
+      grid.innerHTML = catalogSamples.map(p => `
+        <div class="catalog-card">
+          <div class="card-icon-tag">
+            <span class="p-icon">${p.icon}</span>
+            <span class="p-cat">${p.cat}</span>
+          </div>
+          <div class="p-name">${p.name}</div>
+          <div class="p-tagline">${p.tagline}</div>
+          <select class="p-size-select" id="size-${p.id}" onchange="updatePriceDisplay('${p.id}')">
+            ${p.variants.map((v, i) => `
+              <option value="${i}">${v.label} — ₦${v.price.toLocaleString()}</option>
+            `).join('')}
+          </select>
+          <div class="card-bot-row">
+            <span class="p-price-disp" id="disp-${p.id}">₦${p.variants[0].price.toLocaleString()}</span>
+            <button class="btn-add-item" onclick="addItemToCart('${p.id}')">Add to Cart +</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updatePriceDisplay(id) {
+      const p = catalogSamples.find(x => x.id === id);
+      const selIdx = document.getElementById(`size-${id}`).value;
+      document.getElementById(`disp-${id}`).textContent = `₦${p.variants[selIdx].price.toLocaleString()}`;
+    }
+
+    function addItemToCart(id) {
+      const p = catalogSamples.find(x => x.id === id);
+      const selIdx = document.getElementById(`size-${id}`).value;
+      const v = p.variants[selIdx];
+
+      const existing = cart.find(c => c.id === p.id && c.variant === v.label);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: p.id,
+          name: p.name,
+          variant: v.label,
+          price: v.price,
+          qty: 1,
+          icon: p.icon
+        });
+      }
+
+      updateCartDrawer();
+      openCartDrawer();
+    }
+
+    function updateCartDrawer() {
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      document.getElementById('topCartBadge').textContent = `${totalItems} items`;
+      document.getElementById('drawerItemCount').textContent = `${totalItems} items`;
+      document.getElementById('pillCount').textContent = `Cart (${totalItems})`;
+      document.getElementById('pillAmount').textContent = `₦${subtotal.toLocaleString()}`;
+      document.getElementById('subtotalVal').textContent = `₦${subtotal.toLocaleString()}`;
+      document.getElementById('totalVal').textContent = `₦${subtotal.toLocaleString()}`;
+
+      const body = document.getElementById('drawerBody');
+
+      if (cart.length === 0) {
+        body.innerHTML = `
+          <div class="empty-cart-state">
+            <div style="font-size: 48px; margin-bottom: 12px;">🧺</div>
+            <h3 style="color: var(--primary-dark); margin-bottom: 6px;">Your basket is empty</h3>
+            <p style="font-size: 13px;">Add pure honey, fresh tubers, or Yolanda Pap from the store.</p>
+          </div>
+        `;
+        document.getElementById('drawerFooter').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('drawerFooter').style.display = 'block';
+
+      body.innerHTML = `
+        ${cart.map((item, idx) => `
+          <div class="cart-item-row">
+            <div class="item-icon-box">${item.icon}</div>
+            <div class="item-info">
+              <div class="item-name-line">${item.name}</div>
+              <div class="item-size-line">${item.variant}</div>
+              <div class="item-controls-line">
+                <div class="drawer-stepper">
+                  <button class="d-qty-btn" onclick="changeQty(${idx}, -1)">-</button>
+                  <span class="d-qty-val">${item.qty}</span>
+                  <button class="d-qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+                </div>
+                <div class="item-price-calc">₦${(item.price * item.qty).toLocaleString()}</div>
+              </div>
+            </div>
+            <button class="item-delete-btn" onclick="removeItem(${idx})" title="Remove item">🗑️</button>
+          </div>
+        `).join('')}
+
+        <!-- Delivery Notes -->
+        <div class="delivery-note-box">
+          <label class="delivery-note-label">Special Delivery Note (Optional):</label>
+          <textarea class="delivery-note-input" id="deliveryNote" placeholder="e.g., Please call when outside, deliver to Lekki Phase 1..."></textarea>
+        </div>
+      `;
+
+      // Update WhatsApp Order message payload
+      updateWaOrderLink(subtotal);
+    }
+
+    function changeQty(idx, delta) {
+      cart[idx].qty += delta;
+      if (cart[idx].qty < 1) {
+        cart.splice(idx, 1);
+      }
+      updateCartDrawer();
+    }
+
+    function removeItem(idx) {
+      cart.splice(idx, 1);
+      updateCartDrawer();
+    }
+
+    function updateWaOrderLink(subtotal) {
+      let msg = "Hello Yolanda Foods, I would like to place an order:%0A%0A";
+      cart.forEach((c, i) => {
+        msg += `${i+1}. ${c.name} (${c.variant}) x ${c.qty} = ₦${(c.price * c.qty).toLocaleString()}%0A`;
+      });
+      msg += `%0A*Subtotal:* ₦${subtotal.toLocaleString()}%0A*Delivery Location:* Lagos%0A%0APlease confirm my order and payment details!`;
+
+      document.getElementById('waDirectOrderBtn').href = `https://wa.me/2347040275628?text=${msg}`;
+    }
+
+    function openCartDrawer() {
+      document.getElementById('cartBackdrop').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cartBackdrop').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeCartOnBackdrop(e) {
+      if (e.target.id === 'cartBackdrop') {
+        closeCartDrawer();
+      }
+    }
+
+    // ESC to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCartDrawer();
+    });
+
+    renderCatalog();
+    updateCartDrawer();
+  </script>
+</body>
+</html>
